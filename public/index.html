@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>자율성과지표 성과관리 | 계명문화대학교 혁신지원사업단</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F4F6F9;--surface:#FFFFFF;--ink:#0F1E33;--muted:#4A5568;--line:#DDE3EA;--line2:#E7ECF2;--track:#E4E9F0;--thead:#F4F6F9;--head:#1F3A5F;--head-on:#14283F;--badge:#1F3A5F;--pill-bg:#E8EEF6;--pill-ink:#1F3A5F;--link:#1F3A5F;--na:#8A97A8;--na-bg:#EEF1F5;--sel:#F1F5FA;--ok:#1F5FA8;--warn:#C2620A;--warn-bg:#FBEEDF;
+--t-red:#D23B3B;--t-red-bg:#FCE7E7;--t-red-ink:#A32626;--t-yel:#E0A800;--t-yel-bg:#FDF3D3;--t-yel-ink:#7A5A00;--t-blue:#2F6FD1;--t-blue-bg:#E3EDF8;--t-blue-ink:#1F5FA8;color-scheme:light}
+:root.dark{--bg:#0E1621;--surface:#16212F;--ink:#E6ECF3;--muted:#A9B6C6;--line:#27354B;--line2:#223047;--track:#2A3A51;--thead:#1B283A;--head:#14263D;--head-on:#0B1726;--badge:#2E5A8F;--pill-bg:#22385A;--pill-ink:#C3D6EF;--link:#9DBEE6;--na:#6E7D92;--na-bg:#222E3E;--sel:#1C2A3C;--ok:#5B9BE0;--warn:#E8954A;--warn-bg:#3A2A1A;
+--t-red:#F06A6A;--t-red-bg:#3D1F22;--t-red-ink:#F5A3A3;--t-yel:#F2C230;--t-yel-bg:#3A3018;--t-yel-ink:#F2D27A;--t-blue:#6AA5F0;--t-blue-bg:#1C3350;--t-blue-ink:#A9CBF5;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif;font-size:15px;line-height:1.6;transition:background-color .2s,color .2s}
+a{color:var(--link)}
+button,input,select,textarea{font:inherit;color:inherit}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.wrap{max-width:1280px;margin:0 auto;padding:0 24px}
+/* header */
+.top{background:var(--head);color:#fff}
+.top .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding-top:16px;padding-bottom:16px}
+.brand{display:flex;align-items:center;gap:14px}
+.logo{width:44px;height:44px;border-radius:8px;background:#fff;color:var(--head);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.brand small{display:block;font-size:12px;color:#B8C4D6;letter-spacing:.04em}
+.brand strong{font-size:18px}
+.topnav{display:flex;flex-wrap:wrap;align-items:center;gap:4px}
+.topnav a{color:#D5DDE8;text-decoration:none;padding:10px 14px;border-radius:6px;font-size:14px}
+.topnav a:hover{color:#fff;background:rgba(255,255,255,.08)}
+.topnav a.on{background:var(--head-on);color:#fff;font-weight:600}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border:1px solid rgba(255,255,255,.35);border-radius:22px;background:transparent;color:#fff;font-size:13px;font-weight:600;cursor:pointer}
+.btn-ghost:hover{background:rgba(255,255,255,.08)}
+#app{display:flex;flex-direction:column;gap:32px;padding:28px 0 64px}
+/* status bar */
+.status{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;padding:10px 16px;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-size:13px;color:var(--muted)}
+.status .dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:middle}
+.status.off{border-color:var(--warn);background:var(--warn-bg);color:var(--ink)}
+/* hero */
+.hero{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px}
+.hero h1{margin:4px 0 0;font-size:28px;letter-spacing:-.01em}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.seg{display:flex;padding:4px;gap:4px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.seg button{min-height:40px;padding:0 16px;border:0;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;background:transparent;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--head);color:#fff}
+.clock{display:flex;flex-direction:column;font-size:12px;color:var(--muted);gap:2px}
+.clock div{height:48px;display:flex;align-items:center;gap:8px;padding:0 14px;border:1px solid var(--line);border-radius:8px;background:var(--surface);font-size:14px;color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 16px;border:1px solid var(--line);border-radius:8px;background:var(--surface);font-size:14px;font-weight:600;cursor:pointer;color:var(--ink)}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--head);border-color:var(--head);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn svg{width:18px;height:18px}
+/* donut cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;color:inherit;text-decoration:none}
+a.card:hover{border-color:var(--muted)}
+.card.avg{background:var(--head);border-color:var(--head);color:#fff}
+.card.avg .trk{stroke:rgba(255,255,255,.16)}
+.card.avg .sub{color:#C9D4E3}
+.card h3{margin:0;font-size:14px;font-weight:600}
+.ring{position:relative}
+.ring .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring .big{font-size:30px;font-weight:700;letter-spacing:-.02em}
+.ring .big span{font-size:15px;font-weight:500;opacity:.75}
+.ring .sub{font-size:12px;color:var(--muted)}
+.trk{stroke:var(--track)}
+.val{stroke:var(--c)}
+.tone-blue{--c:var(--t-blue);--cb:var(--t-blue-bg);--ci:var(--t-blue-ink)}
+.tone-yel{--c:var(--t-yel);--cb:var(--t-yel-bg);--ci:var(--t-yel-ink)}
+.tone-red{--c:var(--t-red);--cb:var(--t-red-bg);--ci:var(--t-red-ink)}
+.tone-na{--c:var(--na);--cb:var(--na-bg);--ci:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:600;background:var(--cb);color:var(--ci)}
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:13px;color:var(--muted)}
+.legend i{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:-1px;background:var(--c)}
+/* sections */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.panel-head{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+.panel-head h2,.sec-title h2{margin:0;font-size:19px}
+.sec-title{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:8px}
+.sec-title h2{font-size:22px}
+.tag{font-size:12px;font-weight:700;color:#fff;background:var(--badge);border-radius:4px;padding:2px 8px}
+.pill{font-size:12px;font-weight:600;padding:2px 10px;border-radius:4px;background:var(--pill-bg);color:var(--pill-ink)}
+.ix-title{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.ix-title h3{margin:0;font-size:19px}
+.subgrid{padding:22px 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;border-bottom:1px solid var(--line2)}
+.subcard{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid var(--line2);border-radius:10px}
+.subcard .ring .center{font-size:15px;font-weight:700}
+.subcard b{display:block;font-size:14px;line-height:1.4}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{background:var(--thead);color:var(--muted);font-weight:600;text-align:left;padding:11px 12px;white-space:nowrap}
+td{padding:13px 12px;border-top:1px solid var(--line2);vertical-align:top}
+th:first-child,td:first-child{padding-left:24px}
+th:last-child,td:last-child{padding-right:24px}
+.r{text-align:right}
+.selcol{background:var(--sel);color:var(--ink)}
+tr.total td{border-top:2px solid var(--line);background:var(--thead);font-weight:700}
+.bar{position:relative;flex:1;height:8px;border-radius:4px;background:var(--track)}
+.bar span{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--c)}
+.list{list-style:none;margin:0;padding:0}
+.list li{display:flex;gap:10px;padding:11px 0;border-top:1px solid var(--line2);font-size:14px}
+.list svg{flex:none;margin-top:2px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:24px}
+.pad{padding:20px 24px}
+footer{border-top:1px solid var(--line);background:var(--surface)}
+footer .wrap{padding-top:24px;padding-bottom:24px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:13px;color:var(--muted)}
+/* dialog */
+dialog{width:min(960px,calc(100vw - 24px));max-height:calc(100vh - 32px);padding:0;border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink)}
+dialog::backdrop{background:rgba(10,20,35,.55)}
+.dlg-head{position:sticky;top:0;z-index:1;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 24px;border-bottom:1px solid var(--line);background:var(--surface)}
+.dlg-head h2{margin:0;font-size:19px}
+.dlg-body{padding:20px 24px;display:flex;flex-direction:column;gap:20px}
+.dlg-foot{position:sticky;bottom:0;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;padding:16px 24px;border-top:1px solid var(--line);background:var(--surface)}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+label.f input,label.f textarea{min-height:44px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font-size:14px}
+label.f textarea{min-height:44px;resize:vertical}
+input:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--t-blue);outline-offset:2px}
+.edit-ix{border:1px solid var(--line);border-radius:10px}
+.edit-ix>h3{margin:0;padding:12px 16px;font-size:15px;background:var(--thead);border-bottom:1px solid var(--line);border-radius:10px 10px 0 0}
+.edit-row{display:grid;grid-template-columns:minmax(180px,1.2fr) minmax(130px,.6fr) minmax(200px,1.6fr) auto;gap:12px;align-items:end;padding:14px 16px;border-top:1px solid var(--line2)}
+.edit-row:first-of-type{border-top:0}
+.edit-row .name{font-weight:600;font-size:14px}
+.edit-row .name small{display:block;font-weight:400;color:var(--muted)}
+.check{display:flex;align-items:center;gap:8px;min-height:44px;font-size:13px;color:var(--muted);white-space:nowrap}
+.check input{width:18px;height:18px}
+.helper{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:12px;align-items:end;padding:10px 12px;border-radius:8px;background:var(--sel);font-size:13px}
+.helper label.f{min-width:150px}
+.err{color:var(--t-red-ink);font-size:14px;font-weight:600}
+.btn-ai{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border:0;border-radius:22px;background:#fff;color:var(--head);font-size:13px;font-weight:700;cursor:pointer}
+.btn-ai:hover{background:#E8EEF6}
+.btn-ai svg{width:18px;height:18px}
+.ai-src{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-radius:10px;background:var(--sel);font-size:13px}
+.ai-doc h3{font-size:16px;margin:18px 0 6px;color:var(--ink);padding-bottom:4px;border-bottom:2px solid var(--line)}
+.ai-doc h3:first-child{margin-top:0}
+.ai-doc ul{margin:4px 0 6px;padding-left:20px}
+.ai-doc li{margin:4px 0}
+.ai-doc p{margin:6px 0}
+.ai-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:4px 0 8px}
+.ai-kpi{border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px}
+.ai-kpi b{display:block;font-size:13px}
+.ai-kpi span{font-size:18px;font-weight:700}
+.ai-set{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;padding:12px 16px;border:1px dashed var(--line);border-radius:10px}
+.spin{width:18px;height:18px;border:3px solid var(--track);border-top-color:var(--t-blue);border-radius:50%;animation:sp 1s linear infinite;display:inline-block;vertical-align:middle}
+@keyframes sp{to{transform:rotate(360deg)}}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;background:var(--head);color:#fff;padding:12px 20px;border-radius:10px;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:all .25s;z-index:10}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (max-width:720px){.edit-row{grid-template-columns:1fr 1fr}.edit-row .name{grid-column:1/-1}}
+@media print{.top .topnav,.controls .btn,.seg,.status,#verify,#history,.clock,.btn-ghost{display:none!important}body{background:#fff}.panel,.card{break-inside:avoid}.card.avg{background:#fff;color:#000;border-color:#999}}
+</style>
+</head>
+<body>
+<header class="top">
+<div class="wrap">
+<div class="brand"><div class="logo">[로고]</div><div><small>계명문화대학교 전문대학혁신지원사업단</small><strong>성과관리시스템</strong></div></div>
+<div class="topnav">
+<nav aria-label="주 메뉴" style="display:flex;flex-wrap:wrap;gap:4px">
+<a href="#top" class="on">대시보드</a><a href="#detail">자율성과지표</a><a href="#trend">연차별 목표</a><a href="#verify">데이터 검증</a><a href="#history">수정 이력</a>
+</nav>
+<button type="button" class="btn-ai" id="aiBtn" data-action="ai-open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"></path><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"></path></svg>AI 요약 보고서</button>
+<button type="button" class="btn-ghost" id="themeBtn"></button>
+</div>
+</div>
+</header>
+<main class="wrap" id="top">
+<div id="app" aria-live="polite"><p class="muted">불러오는 중…</p></div>
+</main>
+<footer><div class="wrap"><span>© <span id="yr"></span> 계명문화대학교 전문대학혁신지원사업단</span><span>출처: 자율성과지표 정의서·1차년도 달성도, 2026학년도 자율성과지표 현황. ’26 값은 중간 집계로 확정 실적이 아님.</span></div></footer>
+
+<dialog id="editDlg" aria-labelledby="dlgTitle">
+<form id="editForm" method="dialog" novalidate>
+<div class="dlg-head"><h2 id="dlgTitle">’26 실적 입력</h2><button type="button" class="btn" data-action="close-edit" aria-label="닫기">닫기</button></div>
+<div class="dlg-body" id="editBody"></div>
+<div class="dlg-foot"><div class="err" id="editErr" role="alert"></div><div style="display:flex;gap:10px"><button type="button" class="btn" data-action="close-edit">취소</button><button type="submit" class="btn primary">저장</button></div></div>
+</form>
+</dialog>
+<dialog id="aiDlg" aria-labelledby="aiTitle">
+<div class="dlg-head"><div><h2 id="aiTitle">AI 요약 보고서</h2><div class="muted" style="font-size:13px" id="aiSub"></div></div><button type="button" class="btn" data-action="ai-close" aria-label="닫기">닫기</button></div>
+<div class="dlg-body">
+<div class="ai-src" id="aiSrc"></div>
+<div id="aiSet"></div>
+<div class="ai-doc" id="aiDoc" aria-live="polite"></div>
+</div>
+<div class="dlg-foot"><span class="muted" style="font-size:12px">요약은 입력된 데이터만 근거로 작성됩니다. 보고 전 원자료와 대조해 주세요.</span><div style="display:flex;flex-wrap:wrap;gap:10px"><button type="button" class="btn" data-action="ai-copy">복사</button><button type="button" class="btn" data-action="ai-print">인쇄·PDF</button><button type="button" class="btn primary" data-action="ai-close">닫기</button></div></div>
+</dialog>
+<div class="toast" id="toast" role="status"></div>
+
+<script id="seed" type="application/json">{"version": 1, "meta": {"university": "계명문화대학교", "unit": "전문대학혁신지원사업단", "cycle": "3주기 전문대학혁신지원사업", "asOf": "2026-10-16", "updatedAt": null, "updatedBy": null, "avg25": 113.0}, "indices": [{"key": "future", "no": "①", "name": "미래교육혁신지수", "goal": "G1 교육체계혁신", "def": "고등직업교육의 미래교육 전환을 위한 대학의 교육체계 혁신 역량 지수", "formula": "융합교육 운영(20%) + AI기반 학습자 맞춤형 학습지원(30%) + 재학생 교육만족도(50%)", "base": 57.1, "t25": 76.5, "a25": 88.0, "r25": 115.0, "t26": 88.3, "t27": 100, "subs": [{"id": "f1", "name": "융합교육 운영", "unit": "건", "w": 20, "crit": "마이크로·나노디그리, 융합전공 운영 건수", "dept": "학사운영팀", "base": 2, "t25": 4, "a25": 5, "t26": 6, "c26": 3, "t27": 8, "n25": "마이크로디그리 3건, 융합전공 2건", "n26": "마이크로디그리 3건 (나노디그리·융합전공 집계 중)"}, {"id": "f2", "name": "AI기반 학습자 맞춤형 학습지원", "unit": "명", "w": 30, "crit": "AI셀터디 15시간 이상 이수 + AI 적응형 교과 참여 학생 수", "dept": "교수학습지원센터·학사운영팀", "base": 7, "t25": 44, "a25": 65, "t26": 61, "c26": 7, "t27": 78, "n25": "AI셀터디 23명, AI 적응형 교과 42명", "n26": "AI셀터디 7명, AI 적응형 교과 운영 예정"}, {"id": "f3", "name": "재학생 교육만족도", "unit": "점", "w": 50, "crit": "학년도 말 수요자 만족도조사 중 재학생 교육만족도", "dept": "IR센터", "base": 80.6, "t25": 80.9, "a25": 82.3, "t26": 81.2, "c26": 73, "t27": 81.5, "n25": "’25 조사 82.3점 (표본 813명)", "n26": "73점 입력됨, 학년도 말 조사 항목으로 출처 확인 필요", "flag26": true}]}, {"key": "student", "no": "②", "name": "학생지원혁신지수", "goal": "G1·G2 학생지원혁신", "def": "맞춤형 심리적응 및 취·창업, 진로 지원 등 대학의 학생지원 혁신 역량 지수", "formula": "AI기반 진로·취업 설계 참여(50%) + 재학생 수 유지율(50%)", "base": 88.4, "t25": 91.8, "a25": 100.3, "r25": 109.3, "t26": 96.1, "t27": 100, "subs": [{"id": "s1", "name": "AI기반 진로·취업 설계 참여", "unit": "명", "w": 50, "crit": "AI 자기진단·취업설계(AI면접, 자기소개서, 진로적성검사) 참여 학생 수", "dept": "취업지원센터", "base": 445, "t25": 490, "a25": 595, "t26": 535, "c26": 434, "t27": 580, "n25": "참여 학생 595명", "n26": "434명 (8.31 기준)"}, {"id": "s2", "name": "재학생 수 유지율", "unit": "%", "w": 50, "crit": "4.1자 대비 10.1자 재학생 수 비율 (10.1자 ÷ 4.1자 × 100)", "dept": "학사운영팀", "base": 92.6, "t25": 91.8, "a25": 90.8, "t26": 92.6, "c26": null, "t27": 92.6, "n25": "정보공시 1학기 대비 2학기 90.8%", "n26": "10.1자 재학인원 집계 전"}]}, {"key": "glocal", "no": "③", "name": "지·산·학글로컬혁신지수", "goal": "G1·G3·G4 산학·지역협력", "def": "지역사회·산업 맞춤형 인재양성을 위한 지·산·학 협력 및 재학생 글로벌 역량 제고 역량 지수", "formula": "지·산·학 협력교육(40%) + 열린평생직업교육(40%) + 재학생 글로벌 핵심역량 향상(20%)", "base": 97.7, "t25": 98.4, "a25": 106.0, "r25": 107.7, "t26": 99.2, "t27": 100, "subs": [{"id": "g1", "name": "지·산·학 협력교육", "unit": "건", "w": 40, "crit": "정규·비정규 캡스톤 운영 건수 + 현장실습 이수 인원", "dept": "학사운영팀·현장실습지원센터", "base": 1173, "t25": 1185, "a25": 1240, "t26": 1197, "c26": 1124, "t27": 1209, "n25": "정규 캡스톤 7, 비정규 8, 현장실습 1,225명", "n26": "정규 캡스톤 2, 비정규 2, 현장실습 1,120명(계획 기준)"}, {"id": "g2", "name": "열린평생직업교육", "unit": "명", "w": 40, "crit": "선행학습(산업체, 타 대학, 직업계고 연계 등) 학점인정 학생 수", "dept": "학사운영팀", "base": 1030, "t25": 1040, "a25": 927, "t26": 1050, "c26": 434, "t27": 1060, "n25": "927명, 유아교육과 143명 중복 집계 여부 확인 필요", "n26": "교양 320, 전공 47, 유아교육과 40, 외국인 27", "flag25": true}, {"id": "g3", "name": "재학생 글로벌 핵심역량 향상", "unit": "점", "w": 20, "crit": "재학생 글로벌 핵심역량 사전-사후 향상 점수", "dept": "IR센터", "base": 0.2, "t25": 0.2, "a25": 0.3, "t26": 0.2, "c26": 0.18, "t27": 0.2, "n25": "사전-사후 향상 0.3점", "n26": "0.18점, 도덕성 역량과 동일 값으로 확인 필요", "flag26": true}]}, {"key": "social", "no": "④", "name": "사회적책무혁신지수", "goal": "G4 자율혁신", "def": "타 대학·지역과의 공유·협력 모델 확산 및 책무성 강화 등 대학의 사회적 가치 실현 역량 지수", "formula": "재학생 도덕성 역량 향상(30%) + 인적·물적 자원 공유·협력(30%) + 성과 공유·확산(40%)", "base": 81.3, "t25": 85.1, "a25": 102.2, "r25": 120.1, "t26": 92.5, "t27": 100, "subs": [{"id": "c1", "name": "재학생 도덕성(Altruism) 역량 향상", "unit": "점", "w": 30, "crit": "재학생 도덕성 핵심역량 사전-사후 향상 점수", "dept": "IR센터", "base": 0.1, "t25": 0.2, "a25": null, "t26": 0.2, "c26": 0.18, "t27": 0.2, "n25": "1차년도 세부 실적표 누락", "n26": "0.18점, 글로벌 역량과 동일 값으로 확인 필요", "flag26": true}, {"id": "c2", "name": "인적·물적 자원 공유·협력", "unit": "건", "w": 30, "crit": "공동교과목 개발, 학점교류, 교육공간 공유, 지·산·학 교류협력 건수", "dept": "교수학습지원센터·교육과정지원센터", "base": 108, "t25": 113, "a25": null, "t26": 118, "c26": 71, "t27": 123, "n25": "1차년도 세부 실적표 누락", "n26": "공동교과목 1, 학점교류 2, 교육공간 공유 68"}, {"id": "c3", "name": "성과 공유·확산", "unit": "건", "w": 40, "crit": "벤치마킹, 포럼·워크숍, 발표 건수", "dept": "사업단", "base": 32, "t25": 22, "a25": null, "t26": 27, "c26": 18, "t27": 32, "n25": "1차년도 세부 실적표 누락", "n26": "18건"}]}], "fixed": [{"t": "사회적책무혁신지수 ’25 달성도 120.2% → 120.1%", "d": "102.2 ÷ 85.1 = 120.1%로 재산정, 평균달성도 113.0% 유지"}, {"t": "학생지원혁신지수 ’25 유지율 실적 90.8% 적용", "d": "세부산출 산식의 91.2는 오기, 지수 100.3과 일치하는 90.8 사용"}, {"t": "재학생 수 유지율 산식 정정", "d": "“3차년도 ÷ n차년도” → “n차년도 실적 ÷ 3차년도 목표”"}, {"t": "미래교육혁신지수 연차 목표 76.5 / 88.3 적용", "d": "산출식 표의 71.6 / 85.9는 계산 오류로 미사용"}, {"t": "’26 유지율 0% 처리 해소", "d": "4.1자 + 10.1자 합계 수식 오류로 0이 반영되던 값을 “집계 전”으로 처리"}, {"t": "’26 현재값을 세부현황 기준으로 재연결", "d": "외부 파일 참조([8]) 대신 세부운영지수 합계 사용, 담당부서는 정의서 기준으로 통일"}, {"t": "도덕성 역량 영문 표기 정정", "d": "Altrism → Altruism"}], "pending": [{"t": "열린평생직업교육 ’25 실적 중복 집계 여부", "d": "전공학점인정 232명(유아교육과 포함)과 유아교육과 143명 별도 합산, 중복 시 927명 → 784명"}, {"t": "사회적책무혁신지수 ’25 세부 실적표 누락", "d": "총괄표 실적 102.2의 세부산출 근거(도덕성·공유협력·성과공유) 보완 필요"}, {"t": "’26 재학생 교육만족도 73점 출처", "d": "학년도 말 조사 항목으로 중간값 근거 확인, 지수에 크게 영향(가중치 50%)"}, {"t": "’26 글로벌·도덕성 역량 0.18점 동일 값", "d": "세부현황 시트 공란, IR센터 진단 결과 확인 필요"}, {"t": "성과 공유·확산 근거값 26건 vs 내역 합계 32건", "d": "3년 평균 문구와 내역(1+13+11+2+3+2) 불일치"}, {"t": "선행학습인정 “906명(385%)↑” 근거", "d": "1,030명 기준 906명 증가 시 증가율 약 730%"}, {"t": "반올림 기준 통일", "d": "미래교육 76.555 → 76.5, 지산학 98.451 → 98.4는 절사, 다른 값은 반올림"}, {"t": "현장실습 “55명↑” 비교 기준", "d": "기준값 대비 65명, 목푯값 대비 55명 증가로 기준 명시 필요"}]}</script>
+<script>
+(function () {
+'use strict';
+var DATA = null, HISTORY = [], YEAR = '26', ONLINE = false, LOCAL = false, LAST_SYNC = null;
+function canEdit() { return ONLINE || LOCAL; }
+var app = document.getElementById('app');
+var POLL_MS = 30000;
+
+/* ---------- 유틸 ---------- */
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function round1(v) { return Math.round(v * 10) / 10; }
+function f1(v) { return v == null || isNaN(v) ? '—' : round1(v).toFixed(1); }
+function fnum(v) { if (v == null || v === '') return '—'; return Number.isInteger(v) ? v.toLocaleString('ko-KR') : String(v); }
+function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+function tier(r) { if (r == null || isNaN(r)) return 'na'; if (r >= 70) return 'blue'; if (r >= 60) return 'yel'; return 'red'; }
+function toast(msg) { var t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(function () { t.classList.remove('show'); }, 3200); }
+function seoulParts(d) {
+  var o = {};
+  try { new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).formatToParts(d).forEach(function (p) { o[p.type] = p.value; }); }
+  catch (e) { o = { year: d.getFullYear(), month: ('0' + (d.getMonth() + 1)).slice(-2), day: ('0' + d.getDate()).slice(-2), weekday: '일월화수목금토'.charAt(d.getDay()), hour: ('0' + d.getHours()).slice(-2), minute: ('0' + d.getMinutes()).slice(-2), second: ('0' + d.getSeconds()).slice(-2) }; }
+  if (o.hour === '24') o.hour = '00';
+  return o;
+}
+function fmtStamp(iso) { if (!iso) return '—'; var p = seoulParts(new Date(iso)); return p.year + '.' + p.month + '.' + p.day + ' ' + p.hour + ':' + p.minute; }
+function donut(rate, size, stroke, cls) {
+  var r = (size - stroke) / 2, c = 2 * Math.PI * r, len = rate == null || isNaN(rate) ? 0 : Math.max(0, Math.min(100, rate)) / 100 * c, h = size / 2;
+  return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '" aria-hidden="true">' +
+    '<circle class="trk" cx="' + h + '" cy="' + h + '" r="' + r + '" fill="none" stroke-width="' + stroke + '"></circle>' +
+    '<circle class="val" cx="' + h + '" cy="' + h + '" r="' + r + '" fill="none" stroke-width="' + stroke + '" stroke-dasharray="' + len.toFixed(2) + ' ' + c.toFixed(2) + '" transform="rotate(-90 ' + h + ' ' + h + ')"></circle></svg>';
+}
+var ICON = {
+  edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"></path><path d="M13.5 6.5l4 4"></path></svg>',
+  csv: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"></path><path d="M7 10l5 5 5-5"></path><path d="M5 20h14"></path></svg>',
+  report: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6v18h12V7z"></path><path d="M14 3v4h4"></path><path d="M9 13h6M9 17h4"></path></svg>',
+  print: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 9V4h10v5"></path><rect x="4" y="9" width="16" height="7" rx="1"></rect><path d="M7 14h10v6H7z"></path></svg>',
+  check: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ok)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>',
+  warn: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--warn)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v6M12 16.5v.5"></path></svg>',
+  sun: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>',
+  moon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>'
+};
+
+/* ---------- 테마 ---------- */
+function applyTheme(dark) {
+  document.documentElement.classList.toggle('dark', dark);
+  var b = document.getElementById('themeBtn');
+  b.innerHTML = (dark ? ICON.sun : ICON.moon) + '<span>' + (dark ? '일반 모드' : '다크 모드') + '</span>';
+  b.setAttribute('aria-pressed', String(dark));
+  b.setAttribute('aria-label', dark ? '일반 모드로 전환' : '다크 모드로 전환');
+}
+var saved = store('perf-theme');
+var isDark = saved ? saved === 'dark' : !!(window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+applyTheme(isDark);
+document.getElementById('themeBtn').addEventListener('click', function () { isDark = !isDark; store('perf-theme', isDark ? 'dark' : 'light'); applyTheme(isDark); });
+
+/* ---------- 계산 ---------- */
+function build(y) {
+  return DATA.indices.map(function (ix) {
+    var c26 = 0, partial = false, flagged = false;
+    var subs = ix.subs.map(function (s) {
+      if (s.c26 == null) partial = true; else c26 += s.c26 / s.t27 * s.w;
+      if (s.flag26) flagged = true;
+      var rate, badge, cur, tgt, note;
+      if (y === '25') {
+        rate = s.a25 == null ? null : s.a25 / s.t25 * 100; cur = s.a25; tgt = s.t25; note = s.n25;
+        badge = rate == null ? '자료 누락' : s.flag25 ? (rate >= 100 ? '달성·확인 필요' : '미달성·확인 필요') : rate >= 100 ? '달성' : '미달성';
+      } else {
+        rate = s.c26 == null ? null : s.c26 / s.t26 * 100; cur = s.c26; tgt = s.t26; note = s.n26;
+        badge = rate == null ? '집계 전' : s.flag26 ? '확인 필요' : rate >= 100 ? '목표 도달' : '진행 중';
+      }
+      return { s: s, rate: rate, tone: tier(rate), badge: badge, cur: cur, tgt: tgt, note: note };
+    });
+    var r26 = c26 / ix.t26 * 100;
+    var rate = y === '25' ? ix.r25 : r26;
+    var badge = y === '25' ? (rate >= 100 ? '목표 달성' : '미달성') : partial ? '부분 집계' : flagged ? '진행 중 · 확인 항목 있음' : '진행 중';
+    return { ix: ix, subs: subs, c26: c26, r26: r26, partial: partial, rate: rate, tone: tier(rate), badge: badge,
+      val: y === '25' ? ix.a25 : c26, tgt: y === '25' ? ix.t25 : ix.t26 };
+  });
+}
+
+/* ---------- 렌더 ---------- */
+function render() {
+  var m = DATA.meta, y = YEAR;
+  var idx = build(y), idx26 = y === '26' ? idx : build('26');
+  var avg26 = idx26.reduce(function (a, b) { return a + b.rate; }, 0) / idx26.length;
+  var avg = y === '25' ? m.avg25 : avg26;
+  var h = [];
+
+  // 상태 표시줄
+  h.push('<div class="status' + (canEdit() ? '' : ' off') + '">' +
+    '<span><span class="dot" style="background:' + (canEdit() ? 'var(--ok)' : 'var(--warn)') + '"></span>' + (ONLINE ? '온라인 연결됨 · 30초마다 자동 동기화' : LOCAL ? '이 PC 단독 모드 · 입력 내용은 이 브라우저에 저장' : '연결 끊김 · 읽기 전용 (자동 재연결 시도 중)') + '</span>' +
+    '<span>집계 기준일 <b class="num">' + esc(m.asOf || '—') + '</b></span>' +
+    '<span>최종 수정 <b class="num">' + esc(fmtStamp(m.updatedAt)) + '</b>' + (m.updatedBy ? ' · ' + esc(m.updatedBy) : '') + '</span>' +
+    '<span>데이터 버전 v' + esc(DATA.version) + '</span></div>');
+
+  // 제목·조작부
+  h.push('<section class="hero"><div><div class="muted" style="font-size:13px;font-weight:500">' + esc(m.cycle) + ' · 자율성과지표 4종</div>' +
+    '<h1>' + (y === '25' ? '1차년도(’25) 자율성과지표 달성 결과' : '2차년도(’26) 자율성과지표 진행 현황') + '</h1>' +
+    '<div class="muted" style="font-size:13px">' + (y === '25' ? '출처: 자율성과지표 정의서 및 1차년도 달성도 · 수정 반영본' : '출처: 2026학년도 자율성과지표 현황(중간 집계) · 수식 정정 반영본') + '</div></div>' +
+    '<div class="controls"><div class="seg" role="group" aria-label="조회 연차">' +
+    '<button type="button" data-action="year" data-y="26" aria-pressed="' + (y === '26') + '">2차년도(’26) 진행</button>' +
+    '<button type="button" data-action="year" data-y="25" aria-pressed="' + (y === '25') + '">1차년도(’25) 결과</button></div>' +
+    '<div class="clock">현재 일시<div class="num"><span class="dot" style="width:8px;height:8px;border-radius:50%;background:var(--ok)"></span><time id="clock"></time></div></div>' +
+    '<button type="button" class="btn primary" data-action="open-edit"' + (canEdit() ? '' : ' disabled title="온라인 연결 시 입력할 수 있습니다"') + '>' + ICON.edit + '실적 입력</button>' +
+    '<button type="button" class="btn primary" data-action="report">' + ICON.report + '성과보고서 내보내기</button>' +
+    '<button type="button" class="btn" data-action="backup">' + ICON.csv + '데이터 백업</button>' + (LOCAL ? '<button type="button" class="btn" data-action="restore">' + ICON.edit + '백업 불러오기</button>' : '') +
+    '<button type="button" class="btn" data-action="csv">' + ICON.csv + 'CSV</button>' +
+    '<button type="button" class="btn" data-action="print">' + ICON.print + '인쇄</button></div></section>');
+
+  // 도넛 카드
+  h.push('<section class="cards" aria-label="지표별 달성도"><div class="card avg tone-' + tier(avg) + '"><h3 style="color:#D5DDE8">' + (y === '25' ? '’25 평균달성도' : '’26 평균 진행률') + '</h3>' +
+    '<div class="ring" style="width:148px;height:148px">' + donut(avg, 148, 15) + '<div class="center"><div class="big num">' + f1(avg) + '<span>%</span></div><div class="sub">4개 지표 평균</div></div></div>' +
+    '<div class="sub" style="font-size:13px">' + (y === '25' ? '4개 지표 모두 목표 초과 달성' : '중간 집계 기준, 확정 실적 아님') + '</div></div>');
+  idx.forEach(function (d) {
+    h.push('<a class="card tone-' + d.tone + '" href="#' + d.ix.key + '" aria-label="' + esc(d.ix.name) + ' 달성률 ' + f1(d.rate) + '퍼센트, 세부 현황으로 이동"><h3>' + esc(d.ix.name) + '</h3>' +
+      '<div class="ring" style="width:148px;height:148px">' + donut(d.rate, 148, 15) + '<div class="center"><div class="big num">' + f1(d.rate) + '<span>%</span></div><div class="sub">달성률</div></div></div>' +
+      '<div class="muted num" style="font-size:13px">지수 ' + f1(d.val) + ' / 목표 ' + f1(d.tgt) + '</div><span class="chip">' + esc(d.badge) + '</span></a>');
+  });
+  h.push('</section>');
+
+  // 세부 현황
+  h.push('<section id="detail" style="display:flex;flex-direction:column;gap:24px"><div class="sec-title"><div><h2>지표별 세부 현황</h2><div class="muted" style="font-size:13px">지수 = Σ(n차년도 값 ÷ 3차년도 목푯값 × 100) × 가중치 · 3차년도(’27) 목푯값 = 100.0%</div></div>' +
+    '<div class="legend"><span class="tone-blue"><i></i>70% 이상</span><span class="tone-yel"><i></i>60% 이상 70% 미만</span><span class="tone-red"><i></i>60% 미만 (50% 이하 포함)</span><span class="tone-na"><i></i>집계 전·자료 없음</span></div></div>');
+  idx.forEach(function (d) {
+    var ix = d.ix;
+    h.push('<article class="panel" id="' + ix.key + '"><div class="panel-head"><div style="flex:1 1 420px;min-width:0"><div class="ix-title"><span class="tag">' + esc(ix.no) + '</span><h3>' + esc(ix.name) + '</h3><span class="pill">' + esc(ix.goal) + '</span></div>' +
+      '<div class="muted" style="font-size:14px;margin-top:6px">' + esc(ix.def) + '</div><div class="muted" style="font-size:13px;margin-top:4px">산출식: ' + esc(ix.formula) + '</div></div>' +
+      '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px"><div style="text-align:right"><div class="muted" style="font-size:12px">' + (y === '25' ? '’25 실적 지수 / 목표' : '’26 현재 지수 / 목표') + '</div><div class="num" style="font-size:26px;font-weight:700">' + f1(d.val) + '<span class="muted" style="font-size:14px;font-weight:500"> / ' + f1(d.tgt) + '</span></div></div>' +
+      (canEdit() ? '<button type="button" class="btn" style="min-height:40px" data-action="open-edit" data-ix="' + ix.key + '">' + ICON.edit + '이 지표 실적 입력</button>' : '') + '</div></div>');
+    h.push('<div class="subgrid">');
+    d.subs.forEach(function (x) {
+      h.push('<div class="subcard tone-' + x.tone + '"><div class="ring" style="width:84px;height:84px;flex:none">' + donut(x.rate, 84, 11) + '<div class="center num">' + (x.rate == null ? '—' : Math.round(x.rate) + '%') + '</div></div>' +
+        '<div style="min-width:0"><b>' + esc(x.s.name) + '</b><div class="muted" style="font-size:12px">가중치 ' + x.s.w + '% · ' + esc(x.s.unit) + '</div>' +
+        '<div class="num" style="font-size:13px;margin-top:2px">' + fnum(x.cur) + esc(x.s.unit) + ' / ' + fnum(x.tgt) + esc(x.s.unit) + '</div><span class="chip" style="margin-top:4px;font-size:11px">' + esc(x.badge) + '</span></div></div>');
+    });
+    h.push('</div><div class="scroll"><table style="min-width:1080px"><thead><tr><th>세부지수</th><th>측정기준 · 담당</th><th class="r">기준값</th><th class="r">’25 목표</th><th class="r">’25 실적</th><th class="r">’26 목표</th><th class="r">’26 현재</th><th class="r">’27 목표</th><th class="r selcol">' + (y === '25' ? '’25 달성률' : '’26 진행률') + '</th><th>' + (y === '25' ? '’25 실적 산출내역' : '’26 집계 현황') + '</th></tr></thead><tbody>');
+    d.subs.forEach(function (x) {
+      var s = x.s;
+      h.push('<tr><td style="font-weight:600">' + esc(s.name) + '<div class="muted" style="font-size:12px;font-weight:400">' + s.w + '% · ' + esc(s.unit) + '</div></td>' +
+        '<td class="muted" style="font-size:13px;max-width:260px">' + esc(s.crit) + '<div style="color:var(--ink);margin-top:2px">' + esc(s.dept) + '</div></td>' +
+        '<td class="r num">' + fnum(s.base) + '</td><td class="r num">' + fnum(s.t25) + '</td><td class="r num">' + fnum(s.a25) + '</td><td class="r num">' + fnum(s.t26) + '</td>' +
+        '<td class="r num">' + (s.c26 == null ? '집계 전' : fnum(s.c26)) + '</td><td class="r num">' + fnum(s.t27) + '</td>' +
+        '<td class="r num selcol" style="font-weight:700">' + (x.rate == null ? '—' : f1(x.rate) + '%') + '</td><td class="muted" style="font-size:13px;max-width:280px">' + esc(x.note) + '</td></tr>');
+    });
+    h.push('<tr class="total"><td>종합지수(%)</td><td></td><td class="r num">' + f1(ix.base) + '</td><td class="r num">' + f1(ix.t25) + '</td><td class="r num">' + f1(ix.a25) + '</td><td class="r num">' + f1(ix.t26) + '</td><td class="r num">' + f1(d.c26) + (d.partial ? '*' : '') + '</td><td class="r num">' + f1(ix.t27) + '</td><td class="r num selcol">' + f1(d.rate) + '%</td>' +
+      '<td class="muted" style="font-size:13px;font-weight:500">' + (y === '25' ? (ix.key === 'social' ? '세부 실적표 누락, 총괄표 수치' : '’25 결과보고 기준') : (d.partial ? '* 미집계 세부지수는 0으로 산입된 부분값' : '’26 중간 집계 기준')) + '</td></tr></tbody></table></div></article>');
+  });
+  h.push('</section>');
+
+  // 연차별 총괄
+  h.push('<section class="panel" id="trend"><div class="panel-head"><div><h2>연차별 목표 및 실적 총괄</h2><div class="muted" style="font-size:13px">단위: % · 기준값(’25.2) → 3차년도(’27) 100.0% 도달 경로</div></div></div><div class="scroll"><table style="min-width:900px"><thead><tr><th>자율성과지표</th><th class="r">기준값</th><th class="r">’25 목표</th><th class="r">’25 실적</th><th class="r">’25 달성도</th><th class="r">’26 목표</th><th class="r">’26 현재</th><th class="r">’27 목표</th><th style="width:22%">’27 목표 대비 현재 위치</th></tr></thead><tbody>');
+  idx26.forEach(function (d) {
+    var ix = d.ix, pos = d.c26;
+    h.push('<tr><td style="font-weight:600">' + esc(ix.no + ' ' + ix.name) + '</td><td class="r num">' + f1(ix.base) + '</td><td class="r num">' + f1(ix.t25) + '</td><td class="r num">' + f1(ix.a25) + '</td><td class="r num" style="font-weight:700">' + f1(ix.r25) + '%</td><td class="r num">' + f1(ix.t26) + '</td><td class="r num">' + f1(d.c26) + (d.partial ? '*' : '') + '</td><td class="r num">' + f1(ix.t27) + '</td>' +
+      '<td><div class="tone-' + tier(pos) + '" style="display:flex;align-items:center;gap:10px"><div class="bar"><span style="width:' + Math.max(0, Math.min(100, pos)).toFixed(1) + '%"></span></div><span class="num" style="font-size:13px;min-width:44px;text-align:right">' + f1(pos) + '%</span></div></td></tr>');
+  });
+  h.push('<tr class="total"><td>평균달성도</td><td></td><td></td><td></td><td class="r num">' + f1(m.avg25) + '%</td><td></td><td class="r num muted" style="font-weight:500">' + f1(avg26) + '%</td><td></td><td class="muted" style="font-size:13px;font-weight:500">’26 값은 중간 집계 기준 달성률</td></tr></tbody></table></div></section>');
+
+  // 검증
+  h.push('<section class="grid2" id="verify"><div class="panel pad"><h2 style="margin:0;font-size:19px">수정 반영 내역</h2><div class="muted" style="font-size:13px;margin-bottom:8px">원문 점검 결과를 이 화면의 수치에 반영함</div><ul class="list">');
+  (DATA.fixed || []).forEach(function (v) { h.push('<li>' + ICON.check + '<div><div style="font-weight:600">' + esc(v.t) + '</div><div class="muted" style="font-size:13px">' + esc(v.d) + '</div></div></li>'); });
+  h.push('</ul></div><div class="panel pad"><h2 style="margin:0;font-size:19px">확인 필요 사항</h2><div class="muted" style="font-size:13px;margin-bottom:8px">담당부서 확인 후 원문과 집계표를 정정해야 하는 항목</div><ul class="list">');
+  (DATA.pending || []).forEach(function (v) { h.push('<li>' + ICON.warn + '<div><div style="font-weight:600">' + esc(v.t) + '</div><div class="muted" style="font-size:13px">' + esc(v.d) + '</div></div></li>'); });
+  h.push('</ul></div></section>');
+
+  // 이력
+  h.push('<section class="panel pad" id="history"><h2 style="margin:0;font-size:19px">최근 수정 이력</h2><div class="muted" style="font-size:13px;margin-bottom:8px">' + (LOCAL ? '실적 입력 시 자동 기록 · 정기적으로 [데이터 백업]으로 파일 보관 권장' : '실적 입력 시 자동 기록 · 저장할 때마다 이전 버전이 클라우드에 자동 백업') + '</div>');
+  if (!canEdit()) h.push('<p class="muted">서버에 연결되면 표시됩니다.</p>');
+  else if (!HISTORY.length) h.push('<p class="muted">아직 수정 이력이 없습니다.</p>');
+  else {
+    h.push('<ul class="list">');
+    HISTORY.slice(0, 10).forEach(function (e) { h.push('<li><span class="num muted" style="min-width:120px;font-size:13px">' + esc(fmtStamp(e.at)) + '</span><div><div style="font-weight:600">' + esc(e.editor) + ' · v' + esc(e.version) + '</div><div class="muted" style="font-size:13px">' + esc((e.changes || []).join(' / ')) + '</div></div></li>'); });
+    h.push('</ul>');
+  }
+  h.push('</section>');
+
+  app.innerHTML = h.join('');
+  tick();
+}
+
+/* ---------- 시계 ---------- */
+function tick() {
+  var el = document.getElementById('clock'); if (!el) return;
+  var now = new Date(), p = seoulParts(now);
+  el.textContent = p.year + '.' + p.month + '.' + p.day + ' (' + p.weekday + ') ' + p.hour + ':' + p.minute + ':' + p.second;
+  el.setAttribute('datetime', now.toISOString());
+  document.getElementById('yr').textContent = p.year;
+}
+setInterval(tick, 1000);
+
+/* ---------- 실적 입력 ---------- */
+var dlg = document.getElementById('editDlg');
+function openEdit(focusKey) {
+  var b = [];
+  b.push('<div class="fields"><label class="f">입력자 이름 (필수)<input id="edEditor" autocomplete="name" maxlength="40" value="' + esc(store('perf-editor') || '') + '"></label>' +
+    '<input id="edKey" type="hidden" value="">' +
+    '<label class="f">집계 기준일<input id="edAsOf" type="date" value="' + esc(DATA.meta.asOf || '') + '"></label></div>' +
+    '<p class="muted" style="margin:0;font-size:13px">값을 비우면 “집계 전”으로 처리됩니다. 숫자는 단위 없이 입력하세요.</p>');
+  DATA.indices.forEach(function (ix) {
+    b.push('<section class="edit-ix" data-ix="' + esc(ix.key) + '"><h3>' + esc(ix.no + ' ' + ix.name) + '</h3>');
+    ix.subs.forEach(function (s) {
+      b.push('<div class="edit-row" data-sid="' + esc(s.id) + '"><div class="name">' + esc(s.name) + '<small>’26 목표 ' + fnum(s.t26) + esc(s.unit) + ' · ' + esc(s.dept) + '</small></div>' +
+        '<label class="f">’26 현재값 (' + esc(s.unit) + ')<input class="ed-val" type="number" step="any" inputmode="decimal" value="' + (s.c26 == null ? '' : esc(s.c26)) + '"></label>' +
+        '<label class="f">집계 현황·비고<input class="ed-note" maxlength="300" value="' + esc(s.n26 || '') + '"></label>' +
+        '<label class="check"><input class="ed-flag" type="checkbox"' + (s.flag26 ? ' checked' : '') + '>확인 필요</label>');
+      if (s.id === 's2') {
+        b.push('<div class="helper"><span style="font-weight:600">유지율 계산 도우미</span><label class="f">4.1자 재학인원<input id="h41" type="number" min="0" inputmode="numeric"></label><label class="f">10.1자 재학인원<input id="h101" type="number" min="0" inputmode="numeric"></label><span class="muted">10.1자 ÷ 4.1자 × 100 → 소수 첫째 자리로 현재값에 자동 입력</span></div>');
+      }
+      b.push('</div>');
+    });
+    b.push('</section>');
+  });
+  document.getElementById('editBody').innerHTML = b.join('');
+  document.getElementById('editErr').textContent = '';
+  var h41 = document.getElementById('h41'), h101 = document.getElementById('h101');
+  function calc() {
+    var a = parseFloat(h41.value), c = parseFloat(h101.value);
+    if (a > 0 && c >= 0) document.querySelector('[data-sid="s2"] .ed-val').value = round1(c / a * 100);
+  }
+  if (h41) { h41.addEventListener('input', calc); h101.addEventListener('input', calc); }
+  dlg.showModal();
+  if (focusKey) {
+    var sec = document.querySelector('.edit-ix[data-ix="' + focusKey + '"]');
+    if (sec) { sec.scrollIntoView({ block: 'start' }); var inp = sec.querySelector('.ed-val'); if (inp) inp.focus({ preventScroll: true }); }
+  } else { var nm = document.getElementById('edEditor'); if (!nm.value) nm.focus(); }
+}
+
+/* ---------- 성과보고서 ---------- */
+var HEX = { blue: '#2F6FD1', yel: '#E0A800', red: '#D23B3B', na: '#8A97A8' };
+function rptDonut(rate, size) {
+  var st = Math.round(size * 0.12), r = (size - st) / 2, c = 2 * Math.PI * r, h = size / 2;
+  var len = rate == null || isNaN(rate) ? 0 : Math.max(0, Math.min(100, rate)) / 100 * c;
+  return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '"><circle cx="' + h + '" cy="' + h + '" r="' + r + '" fill="none" stroke="#E4E9F0" stroke-width="' + st + '"/>' +
+    '<circle cx="' + h + '" cy="' + h + '" r="' + r + '" fill="none" stroke="' + HEX[tier(rate)] + '" stroke-width="' + st + '" stroke-dasharray="' + len.toFixed(2) + ' ' + c.toFixed(2) + '" transform="rotate(-90 ' + h + ' ' + h + ')"/>' +
+    '<text x="' + h + '" y="' + (h + size * 0.07) + '" text-anchor="middle" font-size="' + Math.round(size * 0.2) + '" font-weight="700" fill="#0F1E33">' + (rate == null ? '—' : f1(rate)) + '</text></svg>';
+}
+function buildReport() {
+  var m = DATA.meta, idx = build('26'), now = seoulParts(new Date());
+  var avg26 = idx.reduce(function (a, b) { return a + b.rate; }, 0) / idx.length;
+  var good = [], mid = [], low = [], pend = [], flag = [];
+  idx.forEach(function (d) {
+    d.subs.forEach(function (x) {
+      var label = d.ix.name + ' > ' + x.s.name + ' (' + (x.rate == null ? '집계 전' : f1(x.rate) + '%') + ')';
+      if (x.rate == null) pend.push(label); else if (x.rate >= 70) good.push(label); else if (x.rate >= 60) mid.push(label); else low.push(label);
+      if (x.s.flag26) flag.push(d.ix.name + ' > ' + x.s.name + ': ' + (x.s.n26 || '확인 필요'));
+    });
+  });
+  function li(arr, empty) { return arr.length ? arr.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') : '<li>' + empty + '</li>'; }
+  var title = m.cycle + ' 자율성과지표 성과보고서';
+  var H = [];
+  H.push('<!doctype html><html lang="ko"><head><meta charset="utf-8"><title>' + esc(title) + '</title><style>' +
+    '@page{size:A4;margin:16mm 14mm}body{font-family:"Malgun Gothic","맑은 고딕","Apple SD Gothic Neo",sans-serif;color:#111;font-size:10.5pt;line-height:1.55;margin:0;background:#E9EDF2}' +
+    '.page{max-width:820px;margin:20px auto;background:#fff;padding:36px 40px;box-shadow:0 2px 12px rgba(0,0,0,.08)}' +
+    '.bar{position:sticky;top:0;display:flex;gap:8px;justify-content:center;padding:12px;background:#1F3A5F}.bar button{font:inherit;font-size:14px;font-weight:600;padding:10px 18px;border-radius:8px;border:0;cursor:pointer;background:#fff;color:#1F3A5F}' +
+    'h1{font-size:17pt;text-align:center;margin:0 0 4px;color:#1F3A5F}.sub{text-align:center;color:#444;margin:0 0 18px;font-size:10pt}' +
+    'h2{font-size:12.5pt;color:#1F3A5F;border-bottom:2px solid #1F3A5F;padding-bottom:4px;margin:22px 0 10px}h3{font-size:11pt;margin:16px 0 6px}' +
+    'table{width:100%;border-collapse:collapse;font-size:9.5pt;margin:6px 0}th,td{border:1px solid #9AA7B8;padding:5px 6px}th{background:#E8EEF6;font-weight:700}td.r,th.r{text-align:right}' +
+    '.meta td{border:1px solid #9AA7B8}.meta th{width:18%}ul{margin:4px 0 8px;padding-left:20px}li{margin:2px 0}' +
+    '.donuts{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin:8px 0 4px}.donuts div{text-align:center;font-size:9pt;width:19%}' +
+    '.lg{font-size:8.5pt;color:#444;text-align:right}.lg i{display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 3px 0 10px}' +
+    '.note{font-size:8.5pt;color:#555}@media print{body{background:#fff}.bar{display:none}.page{box-shadow:none;margin:0;padding:0;max-width:none}h2{break-after:avoid}table{break-inside:avoid}}' +
+    '</style></head><body>');
+  H.push('<div class="bar"><button onclick="window.print()">PDF로 저장 / 인쇄</button><button onclick="saveDoc()">한글·워드 파일(.doc) 저장</button><button onclick="window.close()">닫기</button></div><div class="page">');
+  H.push('<h1>' + esc(title) + '</h1><p class="sub">2차년도(’26) 중간 점검 · ' + esc(m.university + ' ' + m.unit) + '</p>');
+  H.push('<table class="meta"><tr><th>집계 기준일</th><td>' + esc(m.asOf || '—') + '</td><th>작성 일시</th><td>' + now.year + '.' + now.month + '.' + now.day + ' ' + now.hour + ':' + now.minute + '</td></tr>' +
+    '<tr><th>최종 입력</th><td>' + esc(fmtStamp(m.updatedAt)) + (m.updatedBy ? ' (' + esc(m.updatedBy) + ')' : '') + '</td><th>데이터 버전</th><td>v' + esc(DATA.version) + '</td></tr></table>');
+  H.push('<h2>Ⅰ. 총괄 현황</h2><ul><li>’25(1차년도) 자율성과지표 평균달성도 <b>' + f1(m.avg25) + '%</b>, 4개 지표 모두 목표 초과 달성</li>' +
+    '<li>’26(2차년도) 중간 집계 기준 평균 진행률 <b>' + f1(avg26) + '%</b> (확정 실적 아님)</li>' +
+    '<li>3차년도(’27) 최종 목푯값 100.0% 대비 지수 산출</li></ul>');
+  H.push('<div class="donuts"><div>' + rptDonut(avg26, 104) + '<br><b>평균 진행률</b></div>');
+  idx.forEach(function (d) { H.push('<div>' + rptDonut(d.rate, 104) + '<br><b>' + esc(d.ix.name) + '</b></div>'); });
+  H.push('</div><p class="lg"><i style="background:' + HEX.blue + '"></i>70% 이상<i style="background:' + HEX.yel + '"></i>60~70%<i style="background:' + HEX.red + '"></i>60% 미만<i style="background:' + HEX.na + '"></i>집계 전</p>');
+  H.push('<table><thead><tr><th>자율성과지표</th><th class="r">기준값</th><th class="r">’25 목표</th><th class="r">’25 실적</th><th class="r">’25 달성도</th><th class="r">’26 목표</th><th class="r">’26 현재</th><th class="r">’26 진행률</th><th class="r">’27 목표</th></tr></thead><tbody>');
+  idx.forEach(function (d) { var ix = d.ix; H.push('<tr><td>' + esc(ix.no + ' ' + ix.name) + '</td><td class="r">' + f1(ix.base) + '</td><td class="r">' + f1(ix.t25) + '</td><td class="r">' + f1(ix.a25) + '</td><td class="r">' + f1(ix.r25) + '%</td><td class="r">' + f1(ix.t26) + '</td><td class="r">' + f1(d.c26) + (d.partial ? '*' : '') + '</td><td class="r"><b>' + f1(d.rate) + '%</b></td><td class="r">' + f1(ix.t27) + '</td></tr>'); });
+  H.push('<tr><th>평균</th><td></td><td></td><td></td><th class="r">' + f1(m.avg25) + '%</th><td></td><td></td><th class="r">' + f1(avg26) + '%</th><td></td></tr></tbody></table><p class="note">* 미집계 세부지수가 있어 0으로 산입된 부분값</p>');
+  H.push('<h2>Ⅱ. 지표별 세부 현황</h2>');
+  idx.forEach(function (d) {
+    var ix = d.ix;
+    H.push('<h3>' + esc(ix.no + ' ' + ix.name) + ' (' + esc(ix.goal) + ')</h3><ul><li>정의: ' + esc(ix.def) + '</li><li>산출식: ' + esc(ix.formula) + '</li>' +
+      '<li>’26 현재 지수 ' + f1(d.c26) + ' / 목표 ' + f1(ix.t26) + ' → 진행률 <b>' + f1(d.rate) + '%</b>' + (d.partial ? ' (부분 집계)' : '') + ', ’25 달성도 ' + f1(ix.r25) + '%</li></ul>');
+    H.push('<table><thead><tr><th>세부지수(가중치)</th><th class="r">기준값</th><th class="r">’25 실적</th><th class="r">’26 목표</th><th class="r">’26 현재</th><th class="r">진행률</th><th>담당</th><th>집계 현황</th></tr></thead><tbody>');
+    d.subs.forEach(function (x) { var s = x.s; H.push('<tr><td>' + esc(s.name) + ' (' + s.w + '%, ' + esc(s.unit) + ')</td><td class="r">' + fnum(s.base) + '</td><td class="r">' + fnum(s.a25) + '</td><td class="r">' + fnum(s.t26) + '</td><td class="r">' + (s.c26 == null ? '집계 전' : fnum(s.c26)) + '</td><td class="r"><b>' + (x.rate == null ? '—' : f1(x.rate) + '%') + '</b></td><td>' + esc(s.dept) + '</td><td>' + esc(s.n26 || '') + '</td></tr>'); });
+    H.push('</tbody></table>');
+  });
+  H.push('<h2>Ⅲ. 점검 결과 및 관리 방향</h2><h3>1. 양호(진행률 70% 이상)</h3><ul>' + li(good, '해당 없음') + '</ul>' +
+    '<h3>2. 관찰(60% 이상 70% 미만)</h3><ul>' + li(mid, '해당 없음') + '</ul>' +
+    '<h3>3. 집중관리(60% 미만)</h3><ul>' + li(low, '해당 없음') + '</ul>' + (low.length ? '<ul><li>담당부서별 하반기 추진 일정 점검 및 실적 조기 집계 요청</li></ul>' : '') +
+    '<h3>4. 집계 전 항목</h3><ul>' + li(pend, '해당 없음') + '</ul>' +
+    '<h3>5. 확인 필요 항목</h3><ul>' + li(flag, '해당 없음') + '</ul>');
+  H.push('<h2>Ⅳ. 데이터 검증</h2><h3>1. 수정 반영 내역</h3><ul>' + li((DATA.fixed || []).map(function (v) { return v.t + ' — ' + v.d; }), '없음') + '</ul>' +
+    '<h3>2. 원문 정정 필요 사항</h3><ul>' + li((DATA.pending || []).map(function (v) { return v.t + ' — ' + v.d; }), '없음') + '</ul>');
+  H.push('<p class="note" style="margin-top:24px">※ 본 보고서는 성과관리시스템에서 자동 생성되었으며, ’26 수치는 중간 집계로 확정 실적이 아님.</p></div>');
+  var fname = '자율성과지표_성과보고서_' + (m.asOf || (now.year + now.month + now.day));
+  H.push('<script>function saveDoc(){var bar=document.querySelector(".bar");bar.remove();var html="\\ufeff"+document.documentElement.outerHTML;document.body.insertBefore(bar,document.body.firstChild);var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([html],{type:"application/msword"}));a.download=' + JSON.stringify(fname + '.doc') + ';document.body.appendChild(a);a.click();a.remove();}<\/script></body></html>');
+  return H.join('');
+}
+function openReport() {
+  var w = window.open('', '_blank');
+  if (!w) { toast('팝업이 차단되었습니다. 브라우저에서 이 주소의 팝업을 허용해 주세요.'); return; }
+  w.document.open(); w.document.write(buildReport()); w.document.close();
+}
+function sessionStorageGet(k) { try { return sessionStorage.getItem(k) || ''; } catch (e) { return ''; } }
+document.getElementById('editForm').addEventListener('submit', function (ev) {
+  ev.preventDefault();
+  var err = document.getElementById('editErr');
+  var editor = document.getElementById('edEditor').value.trim(), key = document.getElementById('edKey').value;
+  if (!editor) { err.textContent = '입력자 이름을 적어 주세요.'; document.getElementById('edEditor').focus(); return; }
+  var actuals = {}, bad = null;
+  document.querySelectorAll('.edit-row').forEach(function (row) {
+    var v = row.querySelector('.ed-val').value.trim();
+    if (v !== '' && isNaN(Number(v))) bad = row.querySelector('.ed-val');
+    actuals[row.getAttribute('data-sid')] = { c26: v === '' ? null : Number(v), n26: row.querySelector('.ed-note').value.trim(), flag26: row.querySelector('.ed-flag').checked };
+  });
+  if (bad) { err.textContent = '숫자 형식이 아닌 값이 있습니다.'; bad.focus(); return; }
+  store('perf-editor', editor);
+  try { sessionStorage.setItem('perf-key', key); } catch (e) {}
+  err.textContent = '저장 중…';
+  if (LOCAL) {
+    var r = applyLocal(actuals, editor, document.getElementById('edAsOf').value);
+    if (r.error) { err.textContent = r.error; return; }
+    dlg.close(); render(); toast(r.unchanged ? '변경된 내용이 없습니다' : '이 PC에 저장했습니다 (v' + DATA.version + ')');
+    return;
+  }
+  fetch('/api/actuals', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ version: DATA.version, editor: editor, key: key, asOf: document.getElementById('edAsOf').value, actuals: actuals }) })
+    .then(function (r) { return r.json().then(function (j) { return { status: r.status, body: j }; }); })
+    .then(function (res) {
+      if (res.status === 200) {
+        DATA = res.body.data; dlg.close(); render(); loadHistory();
+        toast(res.body.unchanged ? '변경된 내용이 없습니다' : '저장했습니다 (v' + DATA.version + ')');
+      } else if (res.status === 409) {
+        DATA = res.body.data; render(); err.textContent = res.body.error;
+      } else { err.textContent = res.body.error || '저장하지 못했습니다.'; }
+    })
+    .catch(function () { err.textContent = '서버에 연결할 수 없습니다. 인터넷 연결을 확인해 주세요.'; });
+});
+
+/* ---------- 단독 모드 저장 ---------- */
+function saveLocal() { store('perf-data', JSON.stringify(DATA)); store('perf-history', JSON.stringify(HISTORY.slice(0, 200))); }
+function applyLocal(actuals, editor, asOf) {
+  var next = JSON.parse(JSON.stringify(DATA)), changes = [];
+  var subs = {}; next.indices.forEach(function (ix) { ix.subs.forEach(function (s) { subs[s.id] = s; }); });
+  Object.keys(actuals).forEach(function (sid) {
+    var s = subs[sid], it = actuals[sid]; if (!s) return;
+    var v = it.c26 == null ? null : Number(it.c26);
+    if (v !== s.c26) { changes.push(s.name + ' ' + (s.c26 == null ? '집계 전' : s.c26) + ' → ' + (v == null ? '집계 전' : v)); s.c26 = v; }
+    if ((it.n26 || '') !== (s.n26 || '')) { s.n26 = it.n26; if (!changes.some(function (c) { return c.indexOf(s.name) === 0; })) changes.push(s.name + ' 비고 수정'); }
+    if (!!it.flag26 !== !!s.flag26) { s.flag26 = !!it.flag26; changes.push(s.name + ' 확인필요 ' + (it.flag26 ? '표시' : '해제')); }
+  });
+  if (asOf && asOf !== next.meta.asOf) { changes.push('집계 기준일 ' + next.meta.asOf + ' → ' + asOf); next.meta.asOf = asOf; }
+  if (!changes.length) return { unchanged: true };
+  var now = new Date().toISOString();
+  next.version = (next.version || 0) + 1; next.meta.updatedAt = now; next.meta.updatedBy = editor;
+  DATA = next; HISTORY.unshift({ at: now, editor: editor, version: next.version, changes: changes });
+  try { saveLocal(); if (store('perf-data') == null) throw new Error(); } catch (e) { return { error: '이 브라우저에 저장할 수 없습니다(저장공간 차단). [데이터 백업]으로 파일을 받아 두세요.' }; }
+  return { ok: true };
+}
+function backupJson() {
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify({ data: DATA, history: HISTORY }, null, 2)], { type: 'application/json' }));
+  var p = seoulParts(new Date());
+  a.download = '성과관리_데이터백업_' + p.year + p.month + p.day + '_' + p.hour + p.minute + '.json';
+  document.body.appendChild(a); a.click(); a.remove();
+}
+function restoreJson() {
+  var inp = document.createElement('input'); inp.type = 'file'; inp.accept = '.json,application/json';
+  inp.onchange = function () {
+    var f = inp.files[0]; if (!f) return;
+    var rd = new FileReader();
+    rd.onload = function () {
+      try {
+        var j = JSON.parse(rd.result), d = j.data || j;
+        if (!d.indices || !d.meta) throw new Error();
+        if (!confirm('백업 파일(v' + d.version + ', ' + (d.meta.asOf || '') + ')로 현재 데이터를 바꿉니다. 계속할까요?')) return;
+        DATA = d; HISTORY = j.history || []; saveLocal(); render(); toast('백업을 불러왔습니다');
+      } catch (e) { toast('올바른 백업 파일이 아닙니다'); }
+    };
+    rd.readAsText(f, 'utf-8');
+  };
+  inp.click();
+}
+
+/* ---------- AI 요약 보고서 ---------- */
+var aiDlg = document.getElementById('aiDlg');
+var AI = { serverEnabled: false, model: '', mode: 'auto', text: '' };
+var AI_SYSTEM = '당신은 전문대학혁신지원사업 성과관리 전문가입니다. 제공된 JSON 데이터만 근거로 사업단 내부 보고용 요약 보고서를 한국어 개조식으로 작성하세요. ' +
+  '규칙: 1) 데이터에 없는 수치·사실을 만들지 말 것 2) 진행률 구간은 70% 이상 양호, 60~70% 관찰, 60% 미만 집중관리로 판단 3) ’26 값은 중간 집계로 확정 실적이 아님을 전제 ' +
+  '4) 다음 제목을 마크다운 ## 으로 순서대로 사용: ## 핵심 요약 (3줄 이내), ## 지표별 진단, ## 집중관리 대상, ## 데이터 신뢰도 유의사항, ## 권고 조치 (담당부서 명시) 5) 각 항목은 "- " 로 시작하는 개조식, 문장은 "~함/~임" 형태로 간결하게.';
+function aiFacts() {
+  var idx = build('26');
+  return {
+    기관: DATA.meta.university + ' ' + DATA.meta.unit, 집계기준일: DATA.meta.asOf,
+    평균진행률_26: round1(idx.reduce(function (a, b) { return a + b.rate; }, 0) / idx.length), 평균달성도_25: DATA.meta.avg25,
+    지표: idx.map(function (d) {
+      return { 지표명: d.ix.name, 목표: d.ix.goal, 진행률_26: round1(d.rate), 현재지수_26: round1(d.c26), 목표지수_26: d.ix.t26, 부분집계: d.partial, 달성도_25: d.ix.r25,
+        세부: d.subs.map(function (x) { var s = x.s; return { 세부지수: s.name, 가중치: s.w, 단위: s.unit, 목표_26: s.t26, 현재_26: s.c26, 진행률_26: x.rate == null ? null : round1(x.rate), 담당: s.dept, 확인필요: !!s.flag26, 비고: s.n26, 실적_25: s.a25, 목표_25: s.t25 }; }) };
+    }),
+    원문정정필요: (DATA.pending || []).map(function (v) { return v.t; })
+  };
+}
+function band(r) { return r == null ? '집계 전' : r >= 70 ? '양호' : r >= 60 ? '관찰' : '집중관리'; }
+function autoSummary() {
+  var idx = build('26'), avg = idx.reduce(function (a, b) { return a + b.rate; }, 0) / idx.length;
+  var all = [], low = [], miss = [], flag = [];
+  idx.forEach(function (d) { d.subs.forEach(function (x) { var o = { d: d, x: x }; all.push(o); if (x.rate == null) miss.push(o); else if (x.rate < 60) low.push(o); if (x.s.flag26) flag.push(o); }); });
+  var sorted = idx.slice().sort(function (a, b) { return b.rate - a.rate; });
+  var cnt = { 양호: 0, 관찰: 0, 집중관리: 0 }; idx.forEach(function (d) { cnt[band(d.rate)]++; });
+  var L = [];
+  L.push('## 핵심 요약');
+  L.push('- ’26 중간 집계(' + (DATA.meta.asOf || '—') + ') 기준 자율성과지표 4종 평균 진행률 **' + f1(avg) + '%**, ’25 최종 평균달성도 ' + f1(DATA.meta.avg25) + '% 대비 연중 진행 단계임');
+  L.push('- 양호 ' + cnt['양호'] + '개, 관찰 ' + cnt['관찰'] + '개, 집중관리 ' + cnt['집중관리'] + '개 지표 · 최고 ' + sorted[0].ix.name + '(' + f1(sorted[0].rate) + '%), 최저 ' + sorted[sorted.length - 1].ix.name + '(' + f1(sorted[sorted.length - 1].rate) + '%)');
+  L.push('- 세부지수 ' + all.length + '개 중 60% 미만 ' + low.length + '개, 집계 전 ' + miss.length + '개, 확인 필요 ' + flag.length + '개로 하반기 집계·검증 관리가 핵심임');
+  L.push('## 지표별 진단');
+  idx.forEach(function (d) {
+    var ok = d.subs.filter(function (x) { return x.rate != null; }).sort(function (a, b) { return b.rate - a.rate; });
+    var line = '- **' + d.ix.name + '** ' + f1(d.rate) + '% (' + band(d.rate) + (d.partial ? ', 부분 집계' : '') + ')';
+    if (ok.length) line += ' · 견인: ' + ok[0].s.name + ' ' + f1(ok[0].rate) + '%';
+    if (ok.length > 1) line += ' · 부진: ' + ok[ok.length - 1].s.name + ' ' + f1(ok[ok.length - 1].rate) + '%';
+    var m = d.subs.filter(function (x) { return x.rate == null; }); if (m.length) line += ' · 미집계: ' + m.map(function (x) { return x.s.name; }).join(', ');
+    L.push(line);
+  });
+  L.push('## 집중관리 대상');
+  if (!low.length) L.push('- 진행률 60% 미만 세부지수 없음');
+  low.sort(function (a, b) { return a.x.rate - b.x.rate; }).forEach(function (o) { var s = o.x.s, gap = s.t26 - s.c26; L.push('- ' + o.d.ix.name + ' > **' + s.name + '** ' + f1(o.x.rate) + '% (' + fnum(s.c26) + '/' + fnum(s.t26) + s.unit + ', 목표까지 ' + fnum(round1(gap)) + s.unit + ' 부족) · ' + s.dept); });
+  L.push('## 데이터 신뢰도 유의사항');
+  if (!miss.length && !flag.length) L.push('- 미집계·확인 필요 항목 없음');
+  miss.forEach(function (o) { L.push('- 집계 전: ' + o.x.s.name + ' — ' + (o.x.s.n26 || '집계 일정 확인 필요')); });
+  flag.forEach(function (o) { L.push('- 확인 필요: ' + o.x.s.name + ' — ' + (o.x.s.n26 || '출처 확인')); });
+  if ((DATA.pending || []).length) L.push('- 원문(HWPX·엑셀) 정정 필요 사항 ' + DATA.pending.length + '건 미해결');
+  L.push('## 권고 조치');
+  low.forEach(function (o) { L.push('- ' + o.x.s.dept + ': ' + o.x.s.name + ' 하반기 추진 일정 점검 및 실적 조기 집계'); });
+  miss.forEach(function (o) { L.push('- ' + o.x.s.dept + ': ' + o.x.s.name + ' 집계 시점 확정 후 즉시 입력'); });
+  flag.forEach(function (o) { L.push('- ' + o.x.s.dept + ': ' + o.x.s.name + ' 수치 출처 확인 후 정정'); });
+  L.push('- 사업단: 원문 정정 필요 사항 일괄 정리 및 자체성과관리위원회 보고');
+  return L.join('\n');
+}
+function mdToHtml(md) {
+  var out = [], inList = false;
+  esc(md).split(/\r?\n/).forEach(function (line) {
+    var t = line.trim(); if (!t) return;
+    t = t.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+    if (/^#{1,4}\s/.test(t)) { if (inList) { out.push('</ul>'); inList = false; } out.push('<h3>' + t.replace(/^#{1,4}\s*/, '') + '</h3>'); }
+    else if (/^[-*•·]\s/.test(t)) { if (!inList) { out.push('<ul>'); inList = true; } out.push('<li>' + t.replace(/^[-*•·]\s*/, '') + '</li>'); }
+    else { if (inList) { out.push('</ul>'); inList = false; } out.push('<p>' + t + '</p>'); }
+  });
+  if (inList) out.push('</ul>');
+  return out.join('');
+}
+function aiKpis() {
+  var idx = build('26'), avg = idx.reduce(function (a, b) { return a + b.rate; }, 0) / idx.length;
+  var h = '<div class="ai-kpis"><div class="ai-kpi tone-' + tier(avg) + '"><div class="ring" style="width:44px;height:44px">' + donut(avg, 44, 7) + '</div><div><b>평균 진행률</b><span class="num">' + f1(avg) + '%</span></div></div>';
+  idx.forEach(function (d) { h += '<div class="ai-kpi tone-' + d.tone + '"><div class="ring" style="width:44px;height:44px">' + donut(d.rate, 44, 7) + '</div><div><b>' + esc(d.ix.name) + '</b><span class="num">' + f1(d.rate) + '%</span></div></div>'; });
+  return h + '</div>';
+}
+function aiLocalKey() { return store('perf-ai-key') || ''; }
+function aiAvailable() { return (ONLINE && AI.serverEnabled) || (!ONLINE && !!aiLocalKey()); }
+function renderAi(text, source) {
+  AI.text = text; AI.mode = source;
+  document.getElementById('aiDoc').innerHTML = aiKpis() + mdToHtml(text);
+  var src = document.getElementById('aiSrc'), btn;
+  var label = source === 'claude' ? '<span><b>Claude AI 요약</b> · ' + esc(AI.model || '') + ' · 생성 ' + esc(fmtStamp(new Date().toISOString())) + '</span>'
+    : '<span><b>자동 분석 요약</b> · 대시보드 수치를 규칙에 따라 즉시 정리 (인터넷 불필요)</span>';
+  if (aiAvailable()) btn = '<button type="button" class="btn primary" style="min-height:40px" data-action="ai-gen">' + (source === 'claude' ? '다시 생성' : 'Claude AI로 요약 생성') + '</button>';
+  else btn = '<button type="button" class="btn" style="min-height:40px" data-action="ai-settings">Claude AI 연결 설정</button>';
+  src.innerHTML = label + btn;
+}
+function openAi() {
+  document.getElementById('aiSub').textContent = '집계 기준일 ' + (DATA.meta.asOf || '—') + ' · 데이터 v' + DATA.version;
+  document.getElementById('aiSet').innerHTML = '';
+  var p = ONLINE ? fetch('/api/ai-status', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) { AI.serverEnabled = !!j.enabled; AI.model = j.model || ''; }).catch(function () {}) : Promise.resolve();
+  if (!ONLINE) AI.model = store('perf-ai-model') || 'claude-sonnet-5-5';
+  renderAi(autoSummary(), 'auto');
+  aiDlg.showModal();
+  p.then(function () { if (AI.mode === 'auto') renderAi(AI.text, 'auto'); });
+}
+function aiSettings() {
+  var box = document.getElementById('aiSet');
+  if (ONLINE) {
+    box.innerHTML = '<div class="ai-set"><div style="grid-column:1/-1;font-size:14px"><b>Claude AI 연결 방법 (관리자)</b><br>Netlify 사이트 설정 &gt; Environment variables 에 <code>ANTHROPIC_API_KEY</code>(발급 키)를 추가하고 다시 배포하면 접속자 모두 Claude AI 요약을 쓸 수 있습니다. 키는 Netlify에만 보관되며 브라우저로 전달되지 않습니다. 모델 변경은 <code>AI_MODEL</code> 변수로 지정합니다.</div></div>';
+    return;
+  }
+  box.innerHTML = '<div class="ai-set"><label class="f">Claude API 키<input id="aiKey" type="password" autocomplete="off" placeholder="sk-ant-..." value="' + esc(aiLocalKey()) + '"></label>' +
+    '<label class="f">모델<input id="aiModel" value="' + esc(store('perf-ai-model') || 'claude-sonnet-5-5') + '"></label>' +
+    '<div style="display:flex;gap:8px;align-items:flex-end"><button type="button" class="btn primary" style="min-height:44px" data-action="ai-save-key">저장</button><button type="button" class="btn" style="min-height:44px" data-action="ai-del-key">키 삭제</button></div>' +
+    '<div class="muted" style="grid-column:1/-1;font-size:12px">키는 이 PC 브라우저에만 저장됩니다. 공용 PC에서는 사용 후 [키 삭제]를 눌러 주세요. 인터넷 연결이 필요하며, 요약 시 지표 수치(개인정보 없음)가 Anthropic API로 전송됩니다.</div></div>';
+}
+function aiGenerate() {
+  var doc = document.getElementById('aiDoc'), src = document.getElementById('aiSrc');
+  src.innerHTML = '<span><span class="spin"></span> Claude AI가 요약을 작성하는 중입니다…</span>';
+  var facts = aiFacts(), req;
+  if (ONLINE) {
+    req = fetch('/api/ai-summary', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ facts: facts }) })
+      .then(function (r) {
+        if (!r.ok) return r.json().catch(function () { return {}; }).then(function (j) { throw new Error(j.error || ('AI 요청 실패 (' + r.status + ')')); });
+        AI.model = r.headers.get('x-ai-model') || AI.model;
+        if (!r.body || !r.body.getReader) return r.text();
+        var rd = r.body.getReader(), dec = new TextDecoder(), acc = '';
+        function pump() {
+          return rd.read().then(function (x) {
+            if (x.done) return acc + dec.decode();
+            acc += dec.decode(x.value, { stream: true });
+            doc.innerHTML = aiKpis() + mdToHtml(acc);
+            return pump();
+          });
+        }
+        return pump();
+      });
+  } else {
+    AI.model = store('perf-ai-model') || 'claude-sonnet-5-5';
+    req = fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'content-type': 'application/json', 'x-api-key': aiLocalKey(), 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model: AI.model, max_tokens: 2000, system: AI_SYSTEM, messages: [{ role: 'user', content: '다음 성과지표 데이터를 요약 보고서로 작성해 주세요.\n' + JSON.stringify(facts) }] }) })
+      .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error((j.error && j.error.message) || ('HTTP ' + r.status)); return (j.content || []).filter(function (c) { return c.type === 'text'; }).map(function (c) { return c.text; }).join('\n'); }); });
+  }
+  req.then(function (text) { if (!text) throw new Error('빈 응답'); renderAi(text, 'claude'); })
+    .catch(function (e) { renderAi(AI.text || autoSummary(), 'auto'); var msg = /fetch|network/i.test(e.message) ? '인터넷 연결 또는 API 키를 확인해 주세요' : e.message; toast('AI 요약 실패: ' + msg + ' · 자동 분석 요약을 표시합니다'); });
+}
+function aiPrint() {
+  var w = window.open('', '_blank'); if (!w) { toast('팝업이 차단되었습니다.'); return; }
+  var body = mdToHtml(AI.text);
+  w.document.write('<!doctype html><html lang="ko"><head><meta charset="utf-8"><title>AI 요약 보고서</title><style>body{font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;max-width:760px;margin:24px auto;padding:0 24px;line-height:1.6;color:#111}h1{font-size:18pt;color:#1F3A5F;margin:0}h3{font-size:12.5pt;color:#1F3A5F;border-bottom:2px solid #1F3A5F;padding-bottom:3px;margin:18px 0 6px}li{margin:3px 0}.m{color:#555;font-size:10pt;margin:4px 0 14px}@media print{body{margin:0}}</style></head><body>' +
+    '<h1>자율성과지표 AI 요약 보고서</h1><div class="m">' + esc(DATA.meta.university + ' ' + DATA.meta.unit) + ' · 집계 기준일 ' + esc(DATA.meta.asOf || '') + ' · ' + (AI.mode === 'claude' ? 'Claude AI 요약' : '자동 분석 요약') + '</div>' + body +
+    '<p class="m" style="margin-top:20px">※ 입력 데이터 기반 요약이며, ’26 수치는 중간 집계로 확정 실적이 아님.</p></body></html>');
+  w.document.close(); setTimeout(function () { w.print(); }, 300);
+}
+
+/* ---------- CSV ---------- */
+function exportCsv() {
+  var rows = [['지표', '세부지수', '단위', '가중치(%)', '기준값', '25목표', '25실적', '25달성률(%)', '26목표', '26현재', '26진행률(%)', '27목표', '담당부서', '26집계현황']];
+  build('26').forEach(function (d) {
+    d.subs.forEach(function (x) {
+      var s = x.s, r25 = s.a25 == null ? '' : f1(s.a25 / s.t25 * 100);
+      rows.push([d.ix.name, s.name, s.unit, s.w, s.base, s.t25, s.a25 == null ? '' : s.a25, r25, s.t26, s.c26 == null ? '' : s.c26, x.rate == null ? '' : f1(x.rate), s.t27, s.dept, s.n26 || '']);
+    });
+    rows.push([d.ix.name, '종합지수', '%', 100, d.ix.base, d.ix.t25, d.ix.a25, f1(d.ix.r25), d.ix.t26, f1(d.c26), f1(d.r26), d.ix.t27, '', d.partial ? '부분 집계' : '']);
+  });
+  var csv = '﻿' + rows.map(function (r) { return r.map(function (c) { c = String(c); return /[",\n]/.test(c) ? '"' + c.replace(/"/g, '""') + '"' : c; }).join(','); }).join('\r\n');
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+  a.download = '자율성과지표_' + (DATA.meta.asOf || 'export') + '.csv';
+  document.body.appendChild(a); a.click(); a.remove();
+}
+
+/* ---------- 이벤트 ---------- */
+document.addEventListener('click', function (e) {
+  var t = e.target.closest('[data-action]'); if (!t) return;
+  var a = t.getAttribute('data-action');
+  if (a === 'year') { YEAR = t.getAttribute('data-y'); render(); }
+  else if (a === 'open-edit') { if (!t.disabled) openEdit(t.getAttribute('data-ix')); }
+  else if (a === 'report') openReport();
+  else if (a === 'backup') backupJson();
+  else if (a === 'ai-open') { if (DATA) openAi(); }
+  else if (a === 'ai-close') aiDlg.close();
+  else if (a === 'ai-gen') aiGenerate();
+  else if (a === 'ai-settings') aiSettings();
+  else if (a === 'ai-save-key') { var k = document.getElementById('aiKey').value.trim(), md = document.getElementById('aiModel').value.trim(); store('perf-ai-key', k); store('perf-ai-model', md || 'claude-sonnet-5-5'); document.getElementById('aiSet').innerHTML = ''; renderAi(AI.text, AI.mode); toast(k ? 'API 키를 저장했습니다' : '키가 비어 있습니다'); }
+  else if (a === 'ai-del-key') { try { localStorage.removeItem('perf-ai-key'); } catch (e2) {} document.getElementById('aiSet').innerHTML = ''; renderAi(AI.text, AI.mode); toast('API 키를 삭제했습니다'); }
+  else if (a === 'ai-copy') { var txt = AI.text.replace(/\*\*/g, '').replace(/^##\s*/gm, '■ '); (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(function () { toast('요약 내용을 복사했습니다'); }, function () { toast('복사할 수 없습니다. 내용을 직접 선택해 복사해 주세요.'); }); }
+  else if (a === 'ai-print') aiPrint();
+  else if (a === 'restore') restoreJson();
+  else if (a === 'close-edit') dlg.close();
+  else if (a === 'csv') exportCsv();
+  else if (a === 'print') window.print();
+});
+
+/* ---------- 데이터 로딩·동기화 ---------- */
+function loadHistory() {
+  return fetch('/api/history', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (h) { HISTORY = h; }).catch(function () {});
+}
+function sync(first) {
+  return fetch('/api/data', { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
+    .then(function (d) {
+      var changed = !DATA || d.version !== DATA.version, was = ONLINE;
+      ONLINE = true; LAST_SYNC = new Date();
+      if (changed || !was) {
+        DATA = d;
+        return loadHistory().then(function () {
+          if (dlg.open) return;
+          render();
+          if (!first && changed) toast('다른 사용자가 수정한 내용이 반영되었습니다 (v' + d.version + ')');
+        });
+      }
+    })
+    .catch(function () {
+      var was = ONLINE; ONLINE = false;
+      if (!DATA) {
+        LOCAL = location.protocol === 'file:';
+        var savedData = null; try { savedData = JSON.parse(store('perf-data') || 'null'); HISTORY = JSON.parse(store('perf-history') || '[]'); } catch (e) { HISTORY = []; }
+        DATA = LOCAL && savedData && savedData.indices ? savedData : JSON.parse(document.getElementById('seed').textContent);
+        render();
+      }
+      else if (was && !dlg.open) { render(); toast('서버 연결이 끊겼습니다'); }
+    });
+}
+sync(true);
+setInterval(function () { if (!document.hidden && !LOCAL) sync(false); }, POLL_MS);
+document.addEventListener('visibilitychange', function () { if (!document.hidden && !LOCAL) sync(false); });
+})();
+</script>
+</body>
+</html>
