@@ -321,7 +321,7 @@ R.run=()=>{
    <p class="mini" style="margin:6px 0 10px">국가법령정보(법제처) 커넥터로 현행 법령 조문을 실시간으로 찾아, 학칙·규정이 상위 법령과 어긋나는 부분을 근거 조문과 함께 제시합니다.</p>
    ${S.mcp?"":`<div class="notice warn">이 화면에서는 커넥터를 쓸 수 없습니다. Claude에 로그인한 상태에서 열고, claude.ai 설정 → 커넥터에서 ‘Korean Law’가 연결되어 있는지 확인하십시오.</div>`}
    ${S.lawStatus==="재연결 필요"?`<div class="notice warn">Korean Law 커넥터의 인증이 만료되었습니다. claude.ai 설정 → 커넥터에서 Korean Law를 다시 연결한 뒤 이 화면을 새로 여십시오.</div>`:""}
-   ${S.lawStatus==="미연결"?`<div class="notice warn">Korean Law 커넥터가 연결되어 있지 않습니다. claude.ai 설정 → 커넥터에서 추가하십시오.</div>`:""}
+   ${S.lawStatus==="미연결"?`<div class="notice warn">Korean Law 커넥터가 연결되어 있지 않습니다. claude.ai 설정 → 커넥터에서 추가하십시오.</div>`:""}${S.lawStatus==="서버 미설정"?`<div class="notice warn">서버에 법제처 Open API 인증키(LAW_OC)가 설정되지 않았습니다. 관리자에게 Vercel 환경변수 설정을 요청하십시오.</div>`:""}
    <label class="f" for="lawList">우선 대조할 상위 법령 (한 줄에 하나, AI가 필요하면 다른 법령도 찾아봅니다)<textarea id="lawList" style="min-height:110px">${esc(S.law.laws)}</textarea></label>
    <div class="row" style="margin-top:8px"><button class="btn sm" id="lawTest" ${S.mcp?"":"disabled"}>커넥터 연결 확인</button><span class="mini" id="lawTestOut"></span><span class="spacer"></span><button class="btn sm" id="saveLaw" ${S.readonly?"disabled":""}>설정 저장</button></div>
   </div>
@@ -376,7 +376,7 @@ function reportText(){
 }
 R.report=()=>{const a=S.analysis;const dl=!!S.downloads;
   return head("보고서","검토 결과를 한글(HWPX) 보고서로 내려받거나, 텍스트를 복사해 공문에 붙여 넣습니다.")+`
-  <div class="row"><button class="btn primary" id="copyReport">보고서 텍스트 복사</button>${dl?`<button class="btn gold" id="dlReport">한글(HWPX) 파일로 내려받기</button>`:""}<span class="mini">표·서식이 갖춰진 한글 문서(.hwpx)가 ZIP으로 저장됩니다. 압축을 풀어 한글에서 여십시오.</span></div>
+  <div class="row"><button class="btn primary" id="copyReport">보고서 텍스트 복사</button>${dl?`<button class="btn gold" id="dlReport">한글(HWPX) 파일로 내려받기</button>`:""}<span class="mini">${S.downloads&&S.downloads.direct?"표·서식이 갖춰진 한글 문서(.hwpx)로 바로 저장됩니다.":"표·서식이 갖춰진 한글 문서(.hwpx)가 ZIP으로 저장됩니다. 압축을 풀어 한글에서 여십시오."}</span></div>
   <div class="card"><h2>추가 점검 체크리스트</h2>${CHECKS.map((t,i)=>`<label class="chk"><input type="checkbox" class="ckl" data-k="k${i}" ${S.checklist["k"+i]?"checked":""} ${S.readonly?"disabled":""}><span>${t}</span></label>`).join("")}</div>
   <div class="card report"><pre style="white-space:pre-wrap;font-family:var(--font-body);margin:0">${esc(reportText())}</pre></div>`;};
 
@@ -504,6 +504,7 @@ const LAW_FALLBACK={
 };
 let _lawToolCache=null;
 function lawErrMsg(e){const c=e&&e.code;
+  if(S.mcp&&S.mcp.__vercel&&e&&e.message){S.lawStatus=c==="server_not_connected"?"서버 미설정":"오류";return e.message}
   if(c==="needs_reauth"){S.lawStatus="재연결 필요";return"인증 만료: claude.ai 설정 → 커넥터에서 Korean Law를 다시 연결하십시오."}
   if(c==="server_not_connected"||c==="server_not_found"){S.lawStatus="미연결";return"Korean Law 커넥터가 없습니다: claude.ai 설정 → 커넥터에서 추가하십시오."}
   if(c==="selection_required"){S.lawStatus="선택 필요";return"같은 이름의 커넥터가 여럿입니다. 화면의 선택 창에서 하나를 고르십시오."}
@@ -684,6 +685,7 @@ async function downloadReport(){
   const btn=$("#dlReport");if(btn){btn.disabled=true;btn.innerHTML='<span class="spin"></span> 만드는 중'}
   try{
     const hw=await buildHwpxBlob();const date=new Date().toISOString().slice(0,10);const name=`규정검토보고_${date}`;
+    if(S.downloads.direct){await S.downloads.save({filename:`${name}.hwpx`,data:new Blob([hw],{type:"application/hwp+zip"})});toast("한글(HWPX) 파일을 내려받았습니다.");return}
     const outer=new JSZip();outer.file(`${name}.hwpx`,hw,{compression:"STORE"});
     outer.file("읽어보기.txt","압축을 풀면 나오는 "+name+".hwpx 파일을 한글(한컴오피스 2014 이상)에서 여십시오.\r\n");
     const zipData=await outer.generateAsync({type:"uint8array",compression:"DEFLATE"});
@@ -707,7 +709,7 @@ async function loadDemo(){
 /* ---------- 초기화 ---------- */
 function setStatus(){
   $("#dotAI").className="dot "+(S.sample?"on":"off");$("#stAI").textContent=S.sample?"AI 분석 엔진 사용 가능":"AI 사용 불가(로그인 필요)";
-  $("#dotDB").className="dot "+(S.db?"on":"off");$("#stDB").textContent=S.db?"공유 저장소 연결됨":"임시 저장(새로고침 시 삭제)";
+  $("#dotDB").className="dot "+(S.db?"on":"off");$("#stDB").textContent=S.db?(S.db.__local?"이 PC 브라우저에 저장":"공유 저장소 연결됨"):"임시 저장(새로고침 시 삭제)";
 }
 async function init(){
   const h=location.hash.slice(1);if(VIEWS.some(v=>v.id===h))S.view=h;
