@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>전문대학혁신지원사업발전협의회</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
+<style>
+/* Layout idea: 원본(ickdc.org) 복제 — 흰 헤더+대메뉴 드롭다운, 둥근 메인 비주얼, 공지/홍보 2단, 남색 비전 띠, SNS, 참여대학 띠, 짙은 회색 푸터. 하위 페이지는 서브 비주얼+경로 바+가운데 제목. */
+:root{
+  --blue:#094f99;      /* 원본 주색 */
+  --navy:#1d2737;      /* 진한 남색 */
+  --ink:#263238;       /* 제목 */
+  --text:#555555;      /* 본문 */
+  --line:#e2e5ea;
+  --bg:#fbfbfb;
+  --footer:#2f3035;
+  --accent:#f6b21b;    /* 비전 강조 노랑 */
+  --font:"Noto Sans KR","Pretendard","Malgun Gothic","맑은 고딕",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--font);color:var(--text);background:#fff;font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+h1,h2,h3{color:var(--ink);margin:0;line-height:1.3;text-wrap:balance}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.wrap{max-width:1400px;margin:0 auto;padding:0 40px}
+
+/* 헤더 */
+header.site{position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid var(--line)}
+.hd{height:100px;display:flex;align-items:center;gap:24px}
+.logo{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+.logo .mark{white-space:nowrap;width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#0b5fb6,#1d2737);color:#fff;display:grid;place-items:center;font-weight:800;font-size:14px;letter-spacing:-.5px}
+.logo .mark i{font-style:normal;color:var(--accent)}
+.logo b{font-size:17px;color:var(--navy);letter-spacing:-.6px;font-weight:800}
+.gnb{flex:1;display:flex;justify-content:flex-end;gap:4px;list-style:none;margin:0;padding:0}
+.gnb>li{position:relative}
+.gnb>li>a{display:block;padding:36px 14px;font-weight:700;color:var(--ink);font-size:16px;letter-spacing:-.4px;white-space:nowrap}
+.gnb>li:hover>a,.gnb>li.on>a{color:var(--blue)}
+.gnb .sub{position:absolute;left:50%;transform:translateX(-50%);top:100%;min-width:200px;background:#fff;border:1px solid var(--line);border-top:3px solid var(--blue);list-style:none;margin:0;padding:10px 0;display:none;box-shadow:0 10px 24px rgba(0,0,0,.08)}
+.gnb>li:hover .sub,.gnb>li:focus-within .sub{display:block}
+.gnb .sub a{display:block;padding:8px 20px;font-size:15px;color:var(--text)}
+.gnb .sub a:hover{color:var(--blue);background:#f3f7fc}
+.burger{display:none;background:none;border:0;width:44px;height:44px;cursor:pointer}
+.burger span{display:block;width:24px;height:2px;background:var(--ink);margin:5px auto}
+.mnav{display:none}
+
+/* 메인 비주얼 */
+.hero{margin:24px auto 0;max-width:1400px;padding:0 40px}
+.hero .box{border-radius:28px;overflow:hidden;position:relative;min-height:420px;color:#fff;
+  background:radial-gradient(120% 140% at 85% 20%,rgba(255,255,255,.12),transparent 50%),linear-gradient(115deg,#0a3f7d 0%,#094f99 45%,#1b6fc2 100%);display:grid;grid-template-columns:1.1fr 1fr;align-items:center;padding:56px 64px;gap:40px}
+.hero .box::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.04) 0 1px,transparent 1px 120px);pointer-events:none}
+.slide-title{font-size:38px;font-weight:800;line-height:1.35;letter-spacing:-1px;color:#fff;min-height:3.9em}
+.slide-ctl{display:flex;gap:8px;margin-top:28px;align-items:center}
+.slide-ctl button{width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.5);background:transparent;color:#fff;cursor:pointer;font-size:16px}
+.slide-ctl .dots{display:flex;gap:6px;margin-left:8px}
+.slide-ctl .dots i{width:8px;height:8px;border-radius:99px;background:rgba(255,255,255,.4)}
+.slide-ctl .dots i.on{background:#fff;width:24px}
+.quanti{display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:18px;backdrop-filter:blur(4px);position:relative;z-index:1}
+.quanti div{padding:26px 22px;border-right:1px solid rgba(255,255,255,.2)}
+.quanti div:last-child{border-right:0}
+.quanti dt{font-size:15px;opacity:.9;margin-bottom:8px}
+.quanti small{display:block;font-size:13px;opacity:.85}
+.quanti strong{font-size:46px;font-weight:800;color:var(--accent);line-height:1.1;font-variant-numeric:tabular-nums;letter-spacing:-1px}
+.quanti em{font-style:normal;font-size:16px;margin-left:4px}
+.quanti .note{font-size:12px;opacity:.8;margin-top:6px}
+
+/* 공지/홍보 */
+.board2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;padding:72px 0 64px}
+.board2>section,.ntop>div,.sns>*{min-width:0}
+.bhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.bhead h2{font-size:32px;font-weight:800;letter-spacing:-1px}
+.plus{width:44px;height:44px;border-radius:50%;border:1px solid #c9ced6;display:grid;place-items:center;color:var(--ink);font-size:22px}
+.plus:hover{border-color:var(--blue);color:var(--blue)}
+.ntop{display:flex;gap:22px;padding:22px;border:1px solid var(--line);border-radius:14px;margin-bottom:10px;background:var(--bg)}
+.ntop .date{flex:0 0 84px;text-align:center;border-right:1px solid var(--line);padding-right:18px}
+.ntop .date b{display:block;font-size:34px;color:var(--ink);line-height:1.1}
+.ntop .date span{font-size:13px}
+.ntop h3{font-size:19px;font-weight:700;margin-bottom:6px;letter-spacing:-.5px}
+.ntop p{margin:0;font-size:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.nlist{list-style:none;margin:0;padding:0}
+.nlist li a{display:flex;justify-content:space-between;gap:16px;padding:14px 4px;border-bottom:1px solid var(--line);font-size:16px;color:var(--ink)}
+.nlist li a span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nlist li a time{flex:0 0 auto;font-size:14px;color:#888}
+.nlist li a:hover span{color:var(--blue);text-decoration:underline}
+.promo{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.pcard{display:block}
+.pcard .thumb{aspect-ratio:4/3;border-radius:14px;overflow:hidden;background:linear-gradient(140deg,#0c3a70,#094f99 60%,#2a86d6);color:#fff;padding:20px;display:flex;flex-direction:column;justify-content:flex-end;position:relative}
+.pcard .thumb::before{content:"";position:absolute;inset:0;background:radial-gradient(70% 60% at 80% 10%,rgba(246,178,27,.35),transparent 60%)}
+.pcard .thumb b{position:relative;font-size:19px;line-height:1.4;font-weight:800;letter-spacing:-.5px}
+.pcard .thumb small{position:relative;font-size:12px;opacity:.85;margin-bottom:6px}
+.pcard h3{font-size:16px;font-weight:700;margin:12px 0 4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pcard time{font-size:13px;color:#888}
+.pcard:hover h3{color:var(--blue)}
+
+/* 비전 */
+.vision{background:linear-gradient(180deg,#fff 0 140px,var(--blue) 140px);padding-bottom:80px}
+.vision .big{font-size:120px;font-weight:800;color:var(--blue);line-height:1;letter-spacing:-4px;display:flex;align-items:flex-end;gap:24px;height:140px}
+.vision .big small{font-size:18px;letter-spacing:1px;color:#c3cfdf;font-weight:500;padding-bottom:16px}
+.vision h2{color:#fff;font-size:38px;font-weight:800;letter-spacing:-1px;margin-top:54px;line-height:1.45}
+.vision h2 em{font-style:normal;color:var(--accent)}
+.vision p{color:#dbe6f5;max-width:72ch;margin:18px 0 0}
+.vision .band{margin-top:40px;height:260px;border-radius:24px;background:linear-gradient(120deg,rgba(255,255,255,.18),rgba(255,255,255,.04)),repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 2px,transparent 2px 18px);border:1px solid rgba(255,255,255,.2);display:grid;place-items:center;color:#fff;font-size:22px;font-weight:700;letter-spacing:-.5px;text-align:center;padding:20px}
+
+/* SNS */
+.sns{display:grid;grid-template-columns:300px 1fr;gap:48px;padding:80px 0}
+.sns .lead small{color:var(--blue);font-weight:700}
+.sns .lead h2{font-size:34px;font-weight:800;letter-spacing:-1px;margin-top:6px}
+.icons{display:flex;gap:10px;margin-top:22px}
+.icons a{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:13px}
+.icons .yt{background:#e62117}.icons .ig{background:linear-gradient(45deg,#f9a825,#e1306c,#833ab4)}.icons .nb{background:#03c75a}
+.videos{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.video .thumb{aspect-ratio:16/9;border-radius:12px;background:linear-gradient(160deg,#0f2a50,#094f99);position:relative;display:grid;place-items:center;padding:16px;color:#fff;font-size:14px;font-weight:700;text-align:center;line-height:1.4}
+.video .thumb::after{content:"▶";position:absolute;right:12px;top:10px;background:#e62117;color:#fff;font-size:11px;border-radius:6px;padding:2px 7px}
+.video p{margin:12px 0 0;font-size:15px;color:var(--ink);font-weight:500;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.video:hover p{color:var(--blue)}
+
+/* 참여대학 */
+.univ{background:linear-gradient(110deg,#20252e 0%,#2f3a4a 60%,#44546a 100%);color:#fff;padding:76px 0}
+.univ h2{color:#fff;font-size:38px;font-weight:800;letter-spacing:-1px}
+.univ p{color:#d5dbe4;margin:16px 0 28px}
+.more{display:inline-flex;align-items:center;gap:60px;border:1px solid rgba(255,255,255,.5);border-radius:10px;padding:14px 22px;font-weight:700;font-size:14px}
+.more:hover{background:#fff;color:var(--ink)}
+
+/* 푸터 */
+footer.site{background:var(--footer);color:#a9adb5;font-size:13px;padding:40px 0}
+.ft{display:flex;gap:40px;align-items:flex-start}
+.ft .logo b{color:#fff}
+.ft address{font-style:normal;line-height:1.9}
+.ft .copy{margin-top:10px;color:#7d828b}
+
+/* 하위 페이지 */
+.svis{height:260px;background:linear-gradient(rgba(16,29,48,.55),rgba(16,29,48,.55)),linear-gradient(115deg,#0a3f7d,#094f99 50%,#3c7fc4);display:grid;place-items:center;text-align:center;color:#fff}
+.svis h1{color:#fff;font-size:40px;font-weight:800;letter-spacing:-1px}
+.svis p{margin:8px 0 0;font-size:15px;opacity:.9}
+.loc{max-width:1200px;margin:-34px auto 0;background:#fff;border:1px solid var(--line);display:flex;align-items:stretch;height:68px;position:relative;z-index:2}
+.loc .home{width:68px;display:grid;place-items:center;border-right:1px solid var(--line);font-size:20px}
+.loc .dep{display:flex;align-items:center;padding:0 26px;border-right:1px solid var(--line);min-width:260px;justify-content:space-between;color:var(--ink);font-size:15px}
+.loc .tools{margin-left:auto;display:flex;align-items:center;gap:18px;padding:0 24px;color:#666}
+.subhead{text-align:center;padding:64px 0 10px}
+.subhead h2{font-size:40px;font-weight:700;color:#000}
+.crumb{text-align:right;font-size:13px;color:#888;max-width:1200px;margin:0 auto;padding:0 20px}
+.crumb b{color:var(--blue);font-weight:500}
+.cont{max-width:1200px;margin:0 auto;padding:40px 20px 100px}
+.cont h3.tt{font-size:26px;font-weight:700;margin:36px 0 16px;padding-left:14px;border-left:4px solid var(--blue)}
+.cont h4{font-size:19px;color:var(--ink);margin:26px 0 10px}
+.cont ul.dot{padding-left:20px;margin:0}
+.cont ul.dot li{margin:6px 0}
+.greet{display:grid;grid-template-columns:380px 1fr;gap:56px;background:#f4f6f9;border-radius:6px;padding:48px}
+.greet .photo{aspect-ratio:3/4;background:linear-gradient(160deg,#dfe7f2,#b7c9e0);border-radius:6px;display:grid;place-items:center;color:#5b6f8a;font-weight:700;position:relative}
+.greet .photo .mark{position:absolute;right:-18px;top:-18px;width:76px;height:76px;border-radius:12px;background:var(--blue);color:#fff;display:grid;place-items:center;font-weight:800}
+.greet .lead{font-size:30px;font-weight:700;color:var(--ink);line-height:1.45;letter-spacing:-1px}
+.greet .lead em{font-style:normal;color:var(--blue);display:block;margin-top:14px}
+.greet p{margin:12px 0}
+.greet .sign{text-align:right;margin-top:28px;font-size:18px;color:var(--ink)}
+.greet .sign b{font-size:24px;letter-spacing:6px;margin-left:10px}
+.purpose{border:1px solid var(--line);border-top:3px solid var(--blue);padding:36px;font-size:18px;line-height:1.9;color:var(--ink);background:#fff}
+.tbl{width:100%;border-collapse:collapse;border-top:2px solid var(--ink);font-size:15px}
+.tbl th{background:#f4f6f9;color:var(--ink);font-weight:700;padding:13px 10px;border-bottom:1px solid #d5d9df}
+.tbl td{padding:13px 10px;border-bottom:1px solid var(--line);text-align:center}
+.tbl td.l{text-align:left}
+.tbl tr:hover td{background:#fafcff}
+.tabs{display:flex;border-bottom:2px solid var(--blue);margin-bottom:24px}
+.tabs button{flex:1;padding:14px;border:1px solid var(--line);border-bottom:0;background:#fff;font:inherit;font-weight:700;color:#666;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--blue);color:#fff;border-color:var(--blue)}
+.hist{display:grid;grid-template-columns:200px 1fr;gap:40px}
+.hist .yr{font-size:56px;font-weight:800;color:var(--blue);letter-spacing:-2px;position:sticky;top:120px;align-self:start}
+.hist ul{list-style:none;margin:0;padding:0;border-left:2px solid var(--line)}
+.hist li{position:relative;padding:12px 0 12px 28px}
+.hist li::before{content:"";position:absolute;left:-7px;top:20px;width:12px;height:12px;border-radius:50%;background:#fff;border:3px solid var(--blue)}
+.hist li time{display:block;font-weight:700;color:var(--blue);font-size:15px}
+.vmap{display:grid;gap:12px}
+.vrow{display:grid;grid-template-columns:140px 1fr;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.vrow b{background:var(--blue);color:#fff;display:grid;place-items:center;font-size:17px;padding:14px}
+.vrow div{padding:16px 22px;color:var(--ink);font-weight:500;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.vrow .chip{background:#eef4fb;color:var(--blue);border-radius:6px;padding:6px 12px;font-size:15px}
+.cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.colbox{border:1px solid var(--line);border-radius:10px;padding:20px;background:#fff}
+.colbox h5{margin:0 0 10px;font-size:17px;color:var(--blue)}
+.colbox ul{margin:0;padding-left:18px;font-size:15px}
+.btnline{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--ink);padding:10px 20px;border-radius:4px;font-weight:700;color:var(--ink);font-size:14px}
+.btnline:hover{background:var(--ink);color:#fff}
+.mapbox{height:320px;border-radius:8px;background:repeating-linear-gradient(0deg,#eef2f6 0 1px,transparent 1px 40px),repeating-linear-gradient(90deg,#eef2f6 0 1px,#f8fafc 1px 40px);display:grid;place-items:center;border:1px solid var(--line);text-align:center;color:var(--ink)}
+.mapbox .pin{font-size:34px;color:#e53935}
+.info{display:grid;grid-template-columns:160px 1fr;border-top:2px solid var(--ink);margin-top:24px}
+.info dt,.info dd{padding:14px 18px;border-bottom:1px solid var(--line);margin:0}
+.info dt{background:#f4f6f9;font-weight:700;color:var(--ink)}
+.bsearch{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:12px;flex-wrap:wrap}
+.bsearch form{display:flex;gap:6px}
+.bsearch select,.bsearch input{border:1px solid #cfd4db;padding:9px 12px;font:inherit;font-size:14px}
+.bsearch button{background:var(--ink);color:#fff;border:0;padding:0 18px;font:inherit;font-size:14px;cursor:pointer}
+.gal{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.gal .pcard .thumb b{font-size:16px}
+.notice-ext{font-size:13px;color:#888;margin-top:14px}
+
+@media (max-width:1200px){.gnb>li>a{padding:36px 9px;font-size:15px}.hero .box{grid-template-columns:1fr;padding:44px}.slide-title{min-height:0}}
+@media (max-width:1024px){
+  .gnb{display:none}.burger{display:block;margin-left:auto}
+  .mnav.open{display:block;border-top:1px solid var(--line);background:#fff;max-height:70vh;overflow:auto}
+  .mnav details{border-bottom:1px solid var(--line)}
+  .mnav summary{padding:14px 24px;font-weight:700;color:var(--ink);cursor:pointer}
+  .mnav a{display:block;padding:10px 40px;font-size:15px}
+  .board2,.sns{grid-template-columns:minmax(0,1fr)}
+  .greet{grid-template-columns:1fr}.greet .photo{max-width:300px}
+  .gal{grid-template-columns:repeat(2,1fr)}
+  .hist{grid-template-columns:1fr}.hist .yr{position:static}
+}
+@media (max-width:640px){
+  .wrap,.hero{padding:0 16px}.hd{height:72px}.logo b{font-size:14px}
+  .hero .box{padding:30px 22px;border-radius:18px}.slide-title{font-size:26px}
+  .quanti{grid-template-columns:1fr}.quanti div{border-right:0;border-bottom:1px solid rgba(255,255,255,.2);padding:16px 18px}.quanti strong{font-size:36px}
+  .promo,.videos,.cols3,.gal{grid-template-columns:1fr}
+  .vision .big{font-size:72px;height:100px}.vision{background:linear-gradient(180deg,#fff 0 100px,var(--blue) 100px)}
+  .vision h2,.univ h2{font-size:26px}
+  .svis{height:200px}.svis h1{font-size:26px}
+  .loc{margin:0;height:auto;flex-wrap:wrap}.loc .dep{min-width:0;flex:1;padding:12px 16px}.loc .tools{display:none}
+  .subhead h2{font-size:30px}.greet{padding:24px}.greet .lead{font-size:22px}
+  .tbl{font-size:13px}.tbl .hide-m{display:none}
+  .info{grid-template-columns:100px 1fr}
+  .vrow{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="wrap hd">
+    <a class="logo" href="#home" aria-label="전문대학혁신지원사업발전협의회 홈"><span class="mark">iC<i>K</i></span><b>전문대학혁신지원사업발전협의회</b></a>
+    <ul class="gnb" id="gnb"></ul>
+    <button class="burger" id="burger" aria-label="전체 메뉴 열기" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+  <nav class="mnav" id="mnav" aria-label="모바일 메뉴"></nav>
+</header>
+<main id="view"></main>
+<footer class="site">
+  <div class="wrap ft">
+    <a class="logo" href="#home"><span class="mark">iC<i>K</i></span><b>전문대학혁신지원사업발전협의회</b></a>
+    <div>
+      <address>(42601) 전문대학혁신지원사업발전협의회 사무국 : 대구광역시 달서구 달서대로 675, 계명문화대학교 동산관 1층 행정2실<br>TEL : 053-589-7664, 7854 &nbsp;|&nbsp; FAX : 053-589-7564</address>
+      <div class="copy">Copyright © 2025 전문대학혁신지원사업발전협의회 All Rights Reserved.</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+"use strict";
+const ORIGIN="https://www.ickdc.org/kr/index.php?pCode=";
+/* 메뉴: id가 있으면 이 사이트 안의 페이지, ext면 원본 사이트로 연결 */
+const MENU=[
+ {t:"전문대학혁신지원사업발전협의회",sub:[["인사말","greeting"],["설립목적","purpose"],["운영개요","overview"],["연혁","history"],["조직도","org"],["오시는 길","location"]]},
+ {t:"혁신지원사업소개",sub:[["3주기 사업개요","cycle3"],["2주기 사업개요",{ext:"MN0000030"}],["1주기 사업개요",{ext:"MN0000031"}]]},
+ {t:"사업계획",sub:[["발전협의회 연간 사업계획",{ext:"MN0000034"}],["대학별 사업계획",{ext:"MN0000040"}]]},
+ {t:"사업성과 및 자료 공유",sub:[["발전협의회 사업성과",{ext:"MN0000044"}],["AI·DX 활용사례",{ext:"MN0000044"}],["기타 성과자료 공유",{ext:"MN0000047"}]]},
+ {t:"규정 및 지침",sub:[["협의회 회칙",{ext:"MN0000050"}],["혁신지원사업비 관리 지침",{ext:"MN0000050"}]]},
+ {t:"홍보광장",sub:[["발전협의회","promo"],["사업 운영 대학",{ext:"MN0000023"}]]},
+ {t:"공지사항",sub:[["공지사항","notice"]]}
+];
+const href=x=>typeof x==="string"?"#"+x:ORIGIN+x.ext;
+const tgt=x=>typeof x==="string"?"":' target="_blank" rel="noopener"';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+document.getElementById("gnb").innerHTML=MENU.map((m,i)=>`<li data-i="${i}"><a href="${href(m.sub[0][1])}"${tgt(m.sub[0][1])}>${m.t}</a><ul class="sub">${m.sub.map(s=>`<li><a href="${href(s[1])}"${tgt(s[1])}>${s[0]}</a></li>`).join("")}</ul></li>`).join("");
+document.getElementById("mnav").innerHTML=MENU.map(m=>`<details><summary>${m.t}</summary>${m.sub.map(s=>`<a href="${href(s[1])}"${tgt(s[1])}>${s[0]}</a>`).join("")}</details>`).join("");
+const burger=document.getElementById("burger"),mnav=document.getElementById("mnav");
+burger.addEventListener("click",()=>{const o=mnav.classList.toggle("open");burger.setAttribute("aria-expanded",o)});
+
+/* 데이터 (원본 사이트 2026-11-16 기준) */
+const NOTICES=[
+ [34,"2026학년도 「같이(Together), 가치(Value)!」사회적 공헌 활동 공모전 재안내 (※제출사항 관련 변경)","2026-09-16",948,1232],
+ [33,"2026학년도 「같이(Together), 가치(Value)!」사회적 공헌 활동 공모전 안내","2026-09-08",928,1229],
+ [32,"2026학년도 「내일의 솔루션」 캡스톤 디자인 공모전 안내","2026-09-08",1266,1228],
+ [31,"2026학년도 나의 캠퍼스 성장 스토리 콘텐츠 공모전「Campus Innovation Sotry」안내","2026-09-08",935,1227],
+ [30,"2026년 전문대학 혁신지원사업 해외 선진직업교육 혁신사례 벤치마킹」 위탁 용역 업체 입찰 우선협상 대상자 안내","2026-09-01",767],
+ [29,"2026년 전문대학 혁신지원사업 추계워크숍","2026-08-21",1377],
+ [28,"AID 전환 중점 전문대학 지원사업 분과위원회 사무국 계약직원(사무원) 공개채용 공고(2차)","2026-08-13",790],
+ [27,"(공고번호 2026-001) 「2026년 전문대학 혁신지원사업 해외 선진직업교육 혁신사례 벤치마킹」 위탁 용역 업체 선정을 위한 입찰 실시","2026-08-04",1003],
+ [26,"AID 전환 중점 전문대학 지원사업 분과위원회 사무국 계약직원(사무원) 공개채용 공고","2026-08-04",894],
+ [25,"2026학년도 AI 활용 행정혁신 우수사례 공모전 선정작 발표","2026-07-07",4181],
+ [24,"2026학년도 AI 활용 교육혁신 우수사례 - AI 기반 교수학습법 등 공모전 선정작 발표","2026-07-07",2520],
+ [23,"2026학년도 전문대학 혁신지원사업 숏폼(Short-form) 공모전 선정작 발표","2026-07-07",2304]
+];
+const PROMOS=[
+ ["부울경권 운영협의회","지역의 열을 모아 혁신의 힘으로...부울경권 전문대학, 3주기 공동 성장 본격화","2026-10-29",1242],
+ ["대경권 추계 워크숍","'AI와 일하는 법' 배웠다 — 대구·경북권역, 바이브코딩으로 업무혁신","2026-10-27",1237],
+ ["AI 시대, 전문대학","\"현장은 '지금 해결할 사람'을 원한다\" — 전문대학이 증명한 취업의 공식","2026-09-10"],
+ ["참여학생 설문","전문대 혁신지원사업 참여학생 74% \"진로 구체화돼\"","2026-06-29"],
+ ["특별 기고","전문대학, 낮은 교육비 구조 속 취업률 72.1% 기록","2026-06-23"],
+ ["교육부 간담회","교육부 차관, 전문대학 간담회 개최 — \"AI 전환기, 지역 인재 양성 역할 강화\"","2026-05-22"],
+ ["직업교육 대전환","\"내 직무에 AI를 더하다\"…전문대학 직업교육 대전환","2026-04-20"],
+ ["취업 비법","요즘 뜨는 전문대 '취업 비법'","2026-04-20"],
+ ["성과확산 포럼","전국 전문대 혁신 성과 한자리에… '2025 성과확산 포럼' 서울서 개최","2026-01-27"],
+ ["성과확산포럼","'전문대학 혁신지원사업 성과확산포럼' 개최…학생 주도 성과 '주목'","2026-01-27"],
+ ["AI 콘텐츠 공모전","전문대학생 AI 활용 능력 눈길, 'AI 활용 콘텐츠 공모전' 성황리 마무리","2025-12-11"],
+ ["부울경 AX캠프","부울경 전문대학, AI·신산업 융합 인재 육성 가속","2025-11-24"]
+];
+const VIDEOS=[
+ ["(정책연구 #3) 전문대학의 직업능력개발사업 참여 활성화를 위한 제도개선 방안 연구 - 김진배 연성대학교 산학부총장","https://www.youtube.com/watch?v=HGZF2RTDOi0"],
+ ["(정책연구 #2) 성인학습자의 K-평생직업교육 모델(안) - 윤우영 계명문화대학교 기획실장","https://www.youtube.com/watch?v=p4313D_FcMM"],
+ ["(정책연구 #1) '전문대학 혁신지원사업(3주기) 기획 연구' 중간결과 발표 및 의견 수렴 - 정회승 충북보건과학대학교 기획부총장","https://www.youtube.com/watch?v=s9ny5v15h8U"]
+];
+const SLIDES=["2026년 전문대학 혁신지원사업 사업실무자 추계워크숍(2026. 8. 26.~27.)","2026년 전문대학 혁신지원사업 사업단장 추계워크숍(2026. 8. 27.~28.)"];
+const nUrl=id=>id?ORIGIN+"MN0000051&mode=view&idx="+id:ORIGIN+"MN0000051";
+const pUrl=id=>id?ORIGIN+"MN0000022&mode=view&idx="+id:ORIGIN+"MN0000022";
+const ext=' target="_blank" rel="noopener"';
+
+/* 화면 */
+const V={};
+V.home=()=>`
+<section class="hero" aria-label="주요 소식"><div class="box">
+  <div style="position:relative;z-index:1">
+    <div class="slide-title" id="slideTitle">${SLIDES[0]}</div>
+    <div class="slide-ctl"><button id="prev" aria-label="이전">‹</button><button id="next" aria-label="다음">›</button><button id="pause" aria-label="정지">❚❚</button><div class="dots" id="dots">${SLIDES.map((_,i)=>`<i class="${i?"":"on"}"></i>`).join("")}</div></div>
+  </div>
+  <dl class="quanti">
+    <div><dt>총 사업 기간</dt><small>2025년 ~ 2027년</small><strong>3</strong><em>년 간</em></div>
+    <div><dt>지원대상</dt><small>&nbsp;</small><strong>116</strong><em>개교</em></div>
+    <div><dt>지원규모</dt><small>2026년</small><strong>5,617</strong><em>억원</em><div class="note">※특성화 인센티브, 사업관리비 포함</div></div>
+  </dl>
+</div></section>
+<div class="wrap board2">
+  <section>
+    <div class="bhead"><h2>공지사항</h2><a class="plus" href="#notice" aria-label="공지사항 더보기">+</a></div>
+    <a class="ntop" href="${nUrl(1232)}"${ext}><div class="date"><b>16</b><span>2026.09</span></div><div><h3>${esc(NOTICES[0][1])}</h3><p>재안내 사유: 본심 평가 방법 변경에 따른 안내사항 수정 — 변경 사항: 제출기한 및 방법, 제출 서류, 추진일정</p></div></a>
+    <ul class="nlist">${NOTICES.slice(1,4).map(n=>`<li><a href="${nUrl(n[4])}"${ext}><span>${esc(n[1])}</span><time>${n[2].replace(/-/g,".")}</time></a></li>`).join("")}</ul>
+  </section>
+  <section>
+    <div class="bhead"><h2>홍보광장</h2><a class="plus" href="#promo" aria-label="홍보광장 더보기">+</a></div>
+    <div class="promo">${PROMOS.slice(0,2).map(p=>`<a class="pcard" href="${pUrl(p[3])}"${ext}><div class="thumb"><small>${esc(p[0])}</small><b>${esc(p[1])}</b></div><h3>${esc(p[0])} — ${esc(p[1])}</h3><time>${p[2].replace(/-/g,".")}</time></a>`).join("")}</div>
+  </section>
+</div>
+<section class="vision"><div class="wrap">
+  <div class="big">iCK <small>PROFESSIONAL COLLEGE INNOVATION SUPPORT PROJECT DEVELOPMENT COUNCIL</small></div>
+  <h2>변화를 기회, 협력을 통한 집단 경쟁력 강화로<br><em>대한민국 고등직업교육의 새로운 도약</em></h2>
+  <p>저출산과 고령화 등 사회 환경의 변화로 전문대학은 평생직업교육의 거점으로서 역할이 더욱 강조되고 있습니다.<br>또한 정부가 AI 강국을 표방하는 지금, 우리는 급변하는 산업 환경과 AI·디지털 전환(DX) 시대에 발맞춰 새로운 교육 혁신 모델을 구축해야 합니다.</p>
+  <div class="band">공유와 상생협력을 통한 전문대학 위상 제고 및 고등직업교육 발전 견인</div>
+</div></section>
+<section class="wrap sns">
+  <div class="lead"><small>미디어로 만나는</small><h2>전문대학혁신지원사업 SNS</h2>
+    <div class="icons"><a class="yt" href="https://www.youtube.com/channel/UCl6OsVK24a_2wnSXdCqvoIw"${ext} aria-label="유튜브">▶</a><a class="ig" href="https://www.instagram.com/innovationck_2019/"${ext} aria-label="인스타그램">IG</a><a class="nb" href="https://blog.naver.com/ick_2019"${ext} aria-label="네이버 블로그">N</a></div></div>
+  <div class="videos">${VIDEOS.map(v=>`<a class="video" href="${v[1]}"${ext}><div class="thumb">${esc(v[0].split(" - ")[0])}</div><p>${esc(v[0])}</p></a>`).join("")}</div>
+</section>
+<section class="univ"><div class="wrap">
+  <h2>참여대학이 궁금하다면?</h2>
+  <p>자체성과, 중장기적 성과 지표를 설정하여 혁신과제와 질적 성장의 방향성을<br>제고하고 「대학혁신협약」체결을 통해 성과관리 강화</p>
+  <a class="more" href="${ORIGIN}MN0000016"${ext}>MORE <span>+</span></a>
+</div></section>`;
+
+function sub(menuIdx,title,body){
+  const m=MENU[menuIdx];
+  return `<section class="svis"><div><h1>${m.t}</h1><p>대한민국 고등직업교육의 새로운 도약</p></div></section>
+  <div class="loc"><a class="home" href="#home" aria-label="홈">⌂</a><div class="dep">${m.t} <span>›</span></div><div class="dep">${title} <span>›</span></div><div class="tools"><span aria-hidden="true">☆</span><button onclick="window.print()" style="border:0;background:none;cursor:pointer;font-size:18px" aria-label="인쇄">⎙</button></div></div>
+  <div class="subhead"><h2>${title}</h2></div>
+  <div class="crumb">⌂ 홈 › ${m.t} › <b>${title}</b></div>
+  <div class="cont">${body}</div>`;
+}
+V.greeting=()=>sub(0,"인사말",`<div class="greet">
+ <div class="photo">회장 사진<span class="mark">iCK</span></div>
+ <div>
+  <div class="lead">변화를 기회, 협력을 통한<br>집단 경쟁력 강화로<em>대한민국 고등직업교육의 새로운 도약</em></div>
+  <p style="margin-top:28px"><b>3주기 전문대학 혁신지원사업 사업단장 회장으로서 인사드립니다.</b></p>
+  <p>저출산과 고령화 등 사회 환경의 변화로 전문대학은 평생직업교육의 거점으로서 역할이 더욱 강조되고 있습니다. 또한 정부가 AI 강국을 표방하는 지금, 우리는 급변하는 산업 환경과 AI·디지털 전환(DX) 시대에 발맞춰 새로운 교육 혁신 모델을 구축해야 합니다.</p>
+  <p>이러한 변화의 시기에 우리 전문대학에 필요한 것은 상호 간의 협력과 연대, 혁신 성과의 공유와 확산, 그리고 통합된 하나의 목소리라고 생각합니다.</p>
+  <p>저는 협의회 회장으로서 '공유와 상생협력을 통한 전문대학 위상 제고 및 고등직업교육 발전 견인'이라는 협의회의 비전을 실현하기 위해 다음과 같은 목표를 함께 추진하고자 합니다.</p>
+  <p><b>첫째,</b> 118개 전문대학의 혁신 성과를 적극적으로 공유하고, 권역별 협력 네트워크를 고도화하고, 특히, AI·DX 교육 모델의 활용, 공유, 확산을 적극 추진하여 전체 교육 품질을 높이기 위한 노력이 필요합니다.</p>
+  <p><b>둘째,</b> 학령기 학생부터 성인 학습자와 외국인까지 학습자층이 다양해진 만큼, 전문대학 간 상생 협력을 통해 교육 혁신 모델을 확산하여 전문대학의 경쟁력을 한층 강화해야 할 것입니다.</p>
+  <p><b>마지막으로,</b> 사업단장님들과 실무진 간의 소통을 더욱 강화하고, 대내외 홍보를 활성화하여 전문대학 혁신지원사업의 우수 성과를 널리 알리고, 전문대학의 사회적 위상을 확고히 다지기 위해 노력하겠습니다.</p>
+  <p>존경하는 사업단장 여러분! 전문대학 혁신지원사업을 이끌어 내기 위해 함께 노력해주실 것을 당부드립니다.</p>
+  <p>감사합니다.</p>
+  <div class="sign">전문대학혁신지원사업발전협의회 회장 <b>윤우영</b></div>
+ </div></div>`);
+V.purpose=()=>sub(0,"설립목적",`<h3 class="tt">전문대학혁신지원사업 총괄협의회 목적</h3>
+ <div class="purpose">본 협의회는 고등직업교육의 질 제고와 평생직업교육기관으로서의 역할 강화를 위해 교육부가 지원하는 "전문대학 혁신지원사업"(이하 '혁신지원사업'이라 함)에 선정된 대학 상호간의 정보교류 및 우수사례 공유·확산을 통하여 참여 대학의 경쟁력을 강화하고 혁신지원사업의 효율적 추진 및 성과를 제고하는 것을 그 목적으로 한다.</div>
+ <p style="margin-top:20px"><a class="btnline" href="${ORIGIN}MN0000008"${ext}>원본 파일(PDF, 360.43 KB) 보기 ↗</a></p>`);
+V.overview=()=>sub(0,"운영개요",`<h3 class="tt">운영개요</h3>
+ <h4>가. 전문대학 역할 현황</h4><ul class="dot">
+ <li>전문대학은 일반대학과 차별화된 지역 산업기반 현장성과 지역성의 강점을 활용하여 국가 및 지역발전에 기여할 수 있는 현장중심 전문인력(핵심기술인력, 허리기술인력)을 양성해 오고 있음</li>
+ <li>저출산 및 고령화가 심화됨에 따라 15~64세 생산가능인구는 2023년 3,657만 명에서 2044년 2,717만 명으로 감소할 것으로 예상됨(한반도미래인구연구원, 2024).</li>
+ <li>이에, 노동생산성 유지를 위한 전 생애 평생직업교육이 국가경쟁력을 유지하는 방안으로 대두됨에 따라 전문대학의 평생직업교육에 대한 역할이 강조되고 있음</li>
+ <li>또한, 생산가능인구 감소 문제에 대해 정부 부처 및 산업계, 전문대학 간 연계를 통한 외국인 기술인력 양성이 주요 해결책으로 제시됨. 특히 국내대학 재학 중인 유학생이 창출하는 경제효과를 고려할 때, 유학생 유치·양성이 지역경제에 긍정적 역할을 할 것으로 기대됨</li></ul>
+ <h4>나. 3주기 전문대학 혁신지원사업추진 방향</h4><ul class="dot">
+ <li>전문대학은 2주기 전문대학혁신지원사업을 통해 산업현장 맞춤형 인재양성과 평생직업교육의 중요한 역할을 담당해 왔음. 3주기 전문대학혁신지원사업은 급변하는 산업환경과 AI·디지털 전환시대에 대응하고 국가 인적자원 개발과 지역사회 발전의 핵심 축으로서 자리매김하기 위한 역량 강화가 요구됨</li>
+ <li>2주기 창의적 현장실무 인재양성에서 3주기 AI·디지털 전환에 적응할 수 있는 가치창출형 인재양성으로의 사업 목표 전환에 따른 전문대학 혁신지원사업추진전략의 혁신적인 변화가 요구되고 있음</li>
+ <li>따라서 급속한 환경변화에 효과적으로 대응하기 위해, 개별 전문대학 차원의 노력보다는 전문대학 상호 간 협력과 연대를 통한 집단지성의 발휘, 혁신성과의 공유와 확산, 그리고 전문대학계의 통합된 목소리를 통한 정책 영향력 제고가 절실히 요구됨</li>
+ <li>이에, 발전협의회는 전문대학혁신지원사업의 성공적 추진과 전문대학 교육의 질적 도약을 위한 중추적 역할을 수행해야 함. 특히 개별 대학의 우수사례와 혁신성과를 전체 전문대학으로 확산시키고, 권역별 특성을 반영한 협력체계를 구축하며, 전문대학의 정책 제안력을 강화하여 고등직업교육의 위상을 제고할 필요가 있음</li></ul>
+ <h4>다. 3주기 전문대학 혁신지원사업발전협의회 운영 목적</h4><ul class="dot">
+ <li>3주기 전문대학 혁신지원사업발전협의회는 개별 대학의 한계를 뛰어넘어 전문대학 전체의 발전을 견인하는 핵심 추진체 역할을 수행해야 함. 본 운영계획서에서 제시한 3대 추진전략을 통해 전문대학 간 상생협력 생태계를 구축하고자 함</li>
+ <li>교육부 및 한국연구재단 등과의 의사소통을 활성화하고, 전문대학 혁신지원사업성과의 공유와 확산을 통해 전체 전문대학의 교육품질을 향상시키며, 지역기반 협력네트워크를 강화하여 지역사회 발전에 기여하고자 함</li>
+ <li>특히, 단순한 정보 공유를 넘어서 실질적인 협력과 지원이 이루어지도록 하며, 권역별 특성을 반영한 차별화된 접근으로 실효성 있는 성과를 창출하고, 체계적인 운영시스템을 통해 지속가능한 발전기반을 마련하여 3주기 사업 종료 후에도 전문대학 발전의 구심점 역할을 지속할 수 있도록 노력하고자 함</li>
+ <li>전문대학이 직면한 도전을 기회로 전환하고, 협력을 통한 집단 경쟁력 강화로 대한민국 고등직업교육의 새로운 도약을 이끌어내는 발전협의회를 만들기 위해 노력하고자 함</li></ul>
+ <h3 class="tt">운영체계(안)</h3>
+ <p>3주기 전문대학혁신지원사업의 성과 극대화와 고등직업교육 발전의 지속가능성을 위해 다음과 같은 목표와 체계를 설정함</p>
+ <div class="vmap">
+  <div class="vrow"><b>미션</b><div>지속성장 가능한 고등직업교육 생태계 착근</div></div>
+  <div class="vrow"><b>비전</b><div>공유와 상생협력을 통한 전문대학 위상 제고 및 고등직업교육 발전 견인</div></div>
+  <div class="vrow"><b>목표</b><div><span class="chip">다양한 재학생(학령기 학생, 성인학습자, 외국인) 대상 교육혁신 성과 공유로 교육품질 재고</span><span class="chip">권역별 협력네트워크 강화를 통한 지역기반 전문대학 위상 정립</span><span class="chip">전문대학 간 상생협력 생태계 고도화를 통한 전문대학 브랜드 가치 제고</span><span class="chip">전문대학의 통합된 정책제안과 고등직업교육 발전 방안 공동 추진</span></div></div>
+  <div class="vrow"><b>운영방침</b><div><span class="chip">자율성과 협력 기반 전문대학혁신지원사업 인지도 제고를 위한 공유·확산·홍보 강화</span><span class="chip">데이터 기반 학습자별 교육혁신 모델 운영 지원</span></div></div>
+ </div>
+ <div class="cols3" style="margin-top:16px">
+  <div class="colbox"><h5>전략 1. 전문대학 간 혁신 성과 공유 및 확산 고도화</h5><ul><li>전국 성과 공유</li><li>권역별 성과 공유</li><li>전국 현안 공유</li><li>권역별 현안 공유</li></ul></div>
+  <div class="colbox"><h5>전략 2. 전문대학혁신지원사업 성과창출을 위한 상생협력 강화</h5><ul><li>학생중심 교류강화</li><li>정책연구 추진</li><li>국내·외 우수사례 벤치마킹</li><li>전문대학 상호간 현안해결</li></ul></div>
+  <div class="colbox"><h5>전략 3. 전문대학혁신지원사업 발전협의회의 대·내외 역할 강화</h5><ul><li>정보공유 및 사업 홍보 강화</li><li>거버넌스 활성화</li><li>대내·외 전문대학 홍보 강화</li><li>정책 연계 추진</li></ul></div>
+ </div>`);
+const HISTORY={2025:[["11.","전문대학 A·I DX 상생발전 콜로키움 및 제6회 전문대학 데이터 기반 교육성과 분석 포럼"],["10. 24. ~ 10. 25.","2025 전문대학 혁신지원사업 부울경권 운영협의회 제1차 워크숍"],["10. 23. ~ 10. 24.","2025년 전문대학 혁신지원사업 수도권 사업단장 워크숍"],["10. 16. ~ 10. 17.","2025년 전문대학혁신지원사업 호남·제주권 사업단장 및 사업실무자 공유협업 워크숍"],["09. 25. ~ 09. 26.","2025년 전문대학 혁신지원사업 충청·강원권 제1차 워크숍"],["09. 24. ~ 09. 26.","전문대학 혁신지원사업 추계 워크숍"],["07. 23.","2025년 전문대학 혁신지원사업 발전협의회 사업단장 워크숍 및 총회"],["06. 12.","전문대학 혁신지원사업 3주기 사업단장 간담회(회장 선출)"]]};
+V.history=()=>sub(0,"연혁",`<div class="tabs" role="tablist">${[2025,2024,2023,2022,2021,2020,2019].map((y,i)=>`<button role="tab" aria-selected="${i===0}" ${i?`onclick="window.open('${ORIGIN}MN0000010','_blank','noopener')"`:""}>${y}</button>`).join("")}</div>
+ <div class="hist"><div class="yr">2025</div><ul>${HISTORY[2025].map(h=>`<li><time>${h[0]}</time>${h[1]}</li>`).join("")}</ul></div>
+ <p class="notice-ext">2024년 이전 연혁은 원본 사이트에서 연도 탭을 눌러 확인하실 수 있습니다.</p>`);
+const OFFICERS=[["회장","윤우영","계명문화대학교","협의회 회장"],["부회장","이상희","청강문화산업대학교","협의회 부회장"],["사무국장","김강연","울산과학대학교","협의회 사무국장"],["감사","김휴찬","제주한라대학교","혁신협의회 감사"],["감사","김경화","동의과학대학교","혁신협의회 감사"],["임원","양광모","유한대학교","수도권 회장"],["임원","김창열","경민대학교","수도권 부회장"],["임원","김태욱","안산대학교","수도권 부회장"],["임원","전상훈","호산대학교","대구·경북권 회장"],["임원","황철준","대구과학대학교","대구·경북권 부회장"],["임원","허제은","부산보건대학교","부산·울산·경남권 회장"],["임원","김판길","진주보건대학교","부산·울산·경남권 부회장"],["임원","신성식","세경대학교","충청·강원권 회장"],["임원","류제천","충청대학교","충청·강원권 부회장"],["임원","박호현","목포과학대학교","호남·제주권 회장"],["임원","양향숙","군장대학교","호남·제주권 부회장"],["총무이사","이경은","계명문화대학교","협의회 총무이사"]];
+const COMMITTEES=[["부회장","이상희","분과위원회 총괄"],["기획위원회","김강연, 이경은","총괄계획 수립 및 운영 / 국내외 벤치마킹 운영 계획"],["교육(혁신)위원회","양광모, 김호겸","교육·연구계획 수립 및 운영 / 정책연구과제 발굴 및 진행"],["대외협력·홍보위원회","김태욱, 권용준, 최준락","대외협력·홍보계획 수립 및 운영 / 미디어 홍보 주관 / 홈페이지 구축 및 운영"],["성과관리위원회","이수경, 남현욱, 김민규","성과분석·공유계획 수립 및 운영"],["AI·DX위원회(특화사업위원회)","윤태복, 김준오","디지털전환 전문대학 사업 성과창출 지원 등(필요시 신규사업 발굴 및 성과창출 지원)"]];
+const ADVISORS=[["1주기 전문대학 혁신지원사업발전협의회 회장","정회승","충북보건과학대학교"],["2주기 전문대학 혁신지원사업발전협의회 회장","남기석","영남이공대학교"],["한국전문대학기획실처장협의회 회장","김경화","동의과학대학교"],["한국전문대학교무입학처장협의회 회장","박나연","순천제일대학교"],["한국전문대학학생처장협의회","김영식","대구과학대학교"],["한국전문대학산학협력처·단장협의회 회장","조덕현","전주기전대학교"],["한국직업능력연구원 기획조정본부장","박동열","한국직업능력연구원"],["한국고등직업교육평가원장","류지호","아주자동차대학교"],["고등직업교육연구소장","이병규","동의과학대학교"]];
+V.org=()=>sub(0,"조직도",`<div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-t="t1">임원진 및 사무국</button><button role="tab" aria-selected="false" data-t="t2">분과위원회</button><button role="tab" aria-selected="false" data-t="t3">자문위원단</button></div>
+ <div id="t1"><table class="tbl"><thead><tr><th>연번</th><th>임원구분</th><th>성명</th><th>대학명</th><th class="hide-m">비고</th></tr></thead><tbody>${OFFICERS.map((o,i)=>`<tr><td>${i+1}</td><td>${o[0]}</td><td>${o[1]}</td><td>${o[2]}</td><td class="hide-m">${o[3]}</td></tr>`).join("")}</tbody></table></div>
+ <div id="t2" hidden><table class="tbl"><thead><tr><th>분과</th><th>임원</th><th>분장</th></tr></thead><tbody>${COMMITTEES.map(c=>`<tr><td>${c[0]}</td><td>${c[1]}</td><td class="l">${c[2].split(" / ").map(x=>"- "+x).join("<br>")}</td></tr>`).join("")}</tbody></table><p class="notice-ext">* 표시는 원본 기준입니다.</p></div>
+ <div id="t3" hidden><table class="tbl"><thead><tr><th>연번</th><th>직함</th><th>성명</th><th>대학명</th></tr></thead><tbody>${ADVISORS.map((a,i)=>`<tr><td>${i+1}</td><td class="l">${a[0]}</td><td>${a[1]}</td><td>${a[2]}</td></tr>`).join("")}</tbody></table></div>`);
+V.location=()=>sub(0,"오시는 길",`<h3 class="tt">약도</h3>
+ <div class="mapbox"><div><div class="pin">📍</div><b>계명문화대학교 동산관</b><br><span style="font-size:14px">대구광역시 달서구 달서대로 675</span><br><a class="btnline" style="margin-top:14px" href="https://map.kakao.com/?q=${encodeURIComponent("계명문화대학교")}"${ext}>지도 크게 보기 ↗</a></div></div>
+ <dl class="info"><dt>주소</dt><dd>(42601) 대구광역시 달서구 달서대로 675, 계명문화대학교 동산관 1층 행정2실</dd><dt>연락처</dt><dd>053) 589-7664</dd><dt>팩스</dt><dd>053-589-7598</dd><dt>이메일</dt><dd>jhm@kmcu.ac.kr</dd></dl>`);
+V.cycle3=()=>sub(1,"3주기 사업개요",`<h3 class="tt">전문대학 혁신지원사업 3주기('25~'27) 기본계획</h3>
+ <p><a class="btnline" href="${ORIGIN}MN0000029"${ext}>기본계획 다운로드 ↗</a></p>
+ <h3 class="tt">사업 비전도</h3>
+ <div class="vmap">
+  <div class="vrow"><b>비전</b><div style="font-size:19px;font-weight:700">지속성장 가능한 고등직업교육 생태계 고도화</div></div>
+  <div class="vrow"><b>목표</b><div style="font-size:18px">미래사회 대비 가치창출형 전문기술인재 양성</div></div>
+  <div class="vrow"><b>기본방향</b><div><span class="chip">자율성 강화</span><span class="chip">지역수요 반영</span><span class="chip">직무맞춤 특성화</span></div></div>
+ </div>
+ <div class="cols3" style="margin-top:16px">
+  <div class="colbox"><h5>대내·외 환경변화 대응 및 체질 강화</h5><ul><li>RISE 체계와 연계하여 대학혁신 및 자율 강화</li><li>학령인구 감축에 대응한 입학대상 확보 및 적정규모화 노력추진</li></ul></div>
+  <div class="colbox"><h5>미래사회 요구에 대응하는 직업교육기관</h5><ul><li>기술변화에 대응하여 전문기술인재 양성 지원</li><li>신속한 취창업 지원을 통한 개인 및 국가의 성장동력 확대</li></ul></div>
+  <div class="colbox"><h5>고등직업교육 사회적 가치창출 플랫폼 구축</h5><ul><li>지역의 직업, 평생교육 중심 교육기관</li><li>대학혁신을 통한 지역사회 기여 및 책무성 강화</li></ul></div>
+ </div>
+ <div class="purpose" style="margin-top:16px;text-align:center;font-weight:700">혁신지원사업과 RISE의 유기적 연계로 대학혁신 및 지역발전 견인</div>`);
+V.notice=()=>sub(6,"공지사항",`<div class="bsearch"><span>총 <b>34</b>개의 게시물이 있습니다.</span><form id="nsearch"><select aria-label="검색 항목"><option>제목</option></select><input id="nq" placeholder="검색어를 입력하세요" aria-label="검색어"><button>검색</button></form></div>
+ <table class="tbl"><thead><tr><th>번호</th><th>제목</th><th class="hide-m">작성자</th><th>등록일</th><th class="hide-m">조회</th></tr></thead><tbody id="nbody"></tbody></table>
+ <p class="notice-ext">게시물을 누르면 원본 사이트의 해당 글이 열립니다. 22번 이전 게시물은 원본 사이트에서 확인하실 수 있습니다.</p>`);
+V.promo=()=>sub(5,"발전협의회",`<div class="bsearch"><span>총 <b>${PROMOS.length}</b>개의 최근 게시물</span></div>
+ <div class="gal">${PROMOS.map(p=>`<a class="pcard" href="${pUrl(p[3])}"${ext}><div class="thumb"><small>${esc(p[0])}</small><b>${esc(p[1])}</b></div><h3>${esc(p[1])}</h3><time>전문대학혁신 관리자 | ${p[2]}</time></a>`).join("")}</div>`);
+
+/* 라우팅 */
+const ROUTES=Object.keys(V);
+function render(){
+  const id=location.hash.slice(1);const v=ROUTES.includes(id)?id:"home";
+  document.getElementById("view").innerHTML=V[v]();
+  document.title=(v==="home"?"":document.querySelector(".subhead h2").textContent+" | ")+"전문대학혁신지원사업발전협의회";
+  document.querySelectorAll(".gnb>li").forEach((li,i)=>li.classList.toggle("on",MENU[i].sub.some(s=>s[1]===v)));
+  mnav.classList.remove("open");burger.setAttribute("aria-expanded","false");
+  window.scrollTo(0,0);bind(v);
+}
+let timer=null;
+function bind(v){
+  clearInterval(timer);
+  if(v==="home"){
+    let i=0,paused=false;const t=document.getElementById("slideTitle"),dots=[...document.querySelectorAll("#dots i")];
+    const show=n=>{i=(n+SLIDES.length)%SLIDES.length;t.textContent=SLIDES[i];dots.forEach((d,k)=>d.classList.toggle("on",k===i))};
+    document.getElementById("prev").onclick=()=>show(i-1);document.getElementById("next").onclick=()=>show(i+1);
+    const pb=document.getElementById("pause");pb.onclick=()=>{paused=!paused;pb.textContent=paused?"▶":"❚❚";pb.setAttribute("aria-label",paused?"재생":"정지")};
+    if(!matchMedia("(prefers-reduced-motion: reduce)").matches)timer=setInterval(()=>{if(!paused)show(i+1)},5000);
+  }
+  if(v==="org"){document.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-t]").forEach(x=>{x.setAttribute("aria-selected",x===b);document.getElementById(x.dataset.t).hidden=x!==b})})}
+  if(v==="notice"){
+    const draw=q=>{document.getElementById("nbody").innerHTML=NOTICES.filter(n=>!q||n[1].includes(q)).map(n=>`<tr><td>${n[0]}</td><td class="l"><a href="${nUrl(n[4])}"${ext}>${esc(n[1])}</a></td><td class="hide-m">전문대학혁신 관리자</td><td>${n[2]}</td><td class="hide-m">${n[3].toLocaleString()}</td></tr>`).join("")||`<tr><td colspan="5">검색 결과가 없습니다.</td></tr>`};
+    draw("");document.getElementById("nsearch").onsubmit=e=>{e.preventDefault();draw(document.getElementById("nq").value.trim())};
+  }
+}
+window.addEventListener("hashchange",render);render();
+</script>
+</body>
+</html>

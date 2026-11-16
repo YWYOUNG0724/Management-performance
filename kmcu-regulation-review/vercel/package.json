@@ -1,0 +1,6 @@
+{
+  "name": "kmcu-regulation-review",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" }
+}

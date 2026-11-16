@@ -1,0 +1,132 @@
+import sys, json, asyncio
+from playwright.async_api import async_playwright
+import os
+HERE=os.path.dirname(os.path.abspath(__file__))
+APP=os.path.join(HERE,"..","app","index.html"); MOCK=open(os.path.join(HERE,"mock.js"),encoding="utf-8").read()
+OUT=os.path.join(HERE,"shots"); os.makedirs(OUT,exist_ok=True)
+results=[]
+def check(name,cond,detail=""):
+    results.append((name,bool(cond),detail)); print(("PASS " if cond else "FAIL ")+name+(" :: "+str(detail) if detail else ""))
+
+async def main():
+    async with async_playwright() as p:
+        b=await p.chromium.launch(executable_path=os.environ.get("CHROME","/usr/bin/google-chrome"),args=["--no-sandbox"])
+        ctx=await b.new_context(viewport={"width":1366,"height":900})
+        # 외부 CDN 차단 상태를 그대로 두되 응답 지연 없게 즉시 실패
+        async def h(route):
+            if "jszip" in route.request.url: await route.fulfill(path=os.environ.get("JSZIP","node_modules/jszip/dist/jszip.min.js"),content_type="text/javascript")
+            else: await route.abort()
+        await ctx.route("https://**/*",h)
+        pg=await ctx.new_page(); errs=[]
+        pg.on("pageerror",lambda e:errs.append(str(e)))
+        pg.on("console",lambda m: errs.append("console:"+m.text) if m.type=="error" else None)
+        await pg.add_init_script(MOCK)
+        await pg.goto("file://"+APP); await pg.wait_for_timeout(800)
+        txt=await pg.inner_text("#view")
+        check("초기 대시보드 표시","규정집 분석 총괄판" in txt and "아직 등록된 규정이 없습니다" in txt)
+        check("AI·저장소 상태 표시", "사용 가능" in await pg.inner_text("#stAI") and "연결됨" in await pg.inner_text("#stDB"))
+        await pg.screenshot(path=f"{OUT}/01_dashboard_empty.png")
+        # 예시 불러오기
+        await pg.click("#btnDemo"); await pg.wait_for_timeout(900)
+        t=await pg.inner_text("#view")
+        check("예시 규정 3건 대장 등록", t.count("(예시)")>=3 and "규정 관리 대장" in t, t[:80])
+        rows=await pg.locator("tbody tr").count(); check("대장 행 수 3",rows==3,rows)
+        # 본문 보기 모달
+        await pg.locator("[data-view-reg]").first.click(); await pg.wait_for_timeout(300)
+        body=await pg.inner_text("#regBody"); check("본문 모달에 조문 표시","제1조" in body, body[:40])
+        await pg.click("#mClose")
+        await pg.screenshot(path=f"{OUT}/02_list.png")
+        # 직접 입력 등록
+        await pg.click("[data-v=upload]"); await pg.wait_for_timeout(200)
+        await pg.fill("#fName","(시험) 교원인사규정"); await pg.fill("#fDept","교무처")
+        await pg.fill("#fText","제1조(목적) 이 규정은 교원 인사에 관한 사항을 정한다.\n제3조(임용) 교원 임용은 교원인사위원회의 심의를 거친다.")
+        check("글자 수 실시간 표시", "자" in await pg.inner_text("#fLen") and await pg.inner_text("#fLen")!="0자")
+        await pg.click("#btnAdd"); await pg.wait_for_timeout(500)
+        check("직접 입력 등록 후 4건", await pg.locator("tbody tr").count()==4)
+        # TXT 파일 업로드
+        await pg.click("[data-v=upload]"); await pg.wait_for_timeout(200)
+        open(os.path.join(HERE,"교직원복무규정.txt"),"w",encoding="utf-8").write("제1조(목적) 이 규정은 교직원 복무에 관한 사항을 정한다.\n제5조(근무시간) 근무시간은 09시부터 18시까지로 한다.\n제7조(출장) 출장은 총무과장의 승인을 받는다.")
+        await pg.set_input_files("#file",os.path.join(HERE,"교직원복무규정.txt")); await pg.wait_for_timeout(700)
+        fp=await pg.inner_text("#fileProg"); check("TXT 파일 업로드 등록","등록 완료" in fp, fp)
+        # 이미지형 PDF(텍스트 없음) 처리 — pdf.js 미로딩 환경이므로 실패 메시지 확인
+        open(os.path.join(HERE,"scan.pdf"),"wb").write(b"%PDF-1.4\n%%EOF")
+        await pg.set_input_files("#file",os.path.join(HERE,"scan.pdf")); await pg.wait_for_timeout(500)
+        fp=await pg.inner_text("#fileProg"); check("PDF 읽기 실패 시 오류 표시(앱 중단 없음)","읽기 실패" in fp or "글자를 찾지 못함" in fp, fp.splitlines()[-1])
+        # 분석 실행
+        await pg.click("[data-v=run]"); await pg.wait_for_timeout(300)
+        check("분석 대상 체크박스 5건", await pg.locator(".regsel").count()==5)
+        await pg.fill("#orgBase","기획실\n교무처\n학생처\n총무처"); await pg.click("#saveOrg"); await pg.wait_for_timeout(300)
+        await pg.screenshot(path=f"{OUT}/03_run.png")
+        await pg.click("#btnRun"); await pg.wait_for_timeout(1800)
+        prm=await pg.evaluate("window.__log.prompts[0]")
+        law=await pg.evaluate("window.__log.law")
+        lp=await pg.evaluate("window.__log.prompts[1]")
+        check("상위법 대조: AI에 법령 도구 제공",lp and lp["opts"]["tools"]==["search_law","get_law_text"],lp and lp["opts"])
+        check("상위법 대조: 커넥터 실제 호출(검색→조문)",[x["tool"] for x in law][-2:]==["search_law","get_law_text"],law)
+        check("상위법 대조: 우선 법령 목록 프롬프트 반영","사립학교법" in lp["input"] and "국가법령정보" in lp["input"])
+        check("AI 프롬프트에 규정 본문 포함","제35조" in prm["input"] and "교원인사규정" in prm["input"])
+        check("AI 프롬프트에 기준 조직표 반영","학생처, 총무처" in prm["input"])
+        check("분석 모델 등급 complex",prm["opts"].get("modelTier")=="complex")
+        t=await pg.inner_text("#view")
+        check("분석 후 대시보드 집계(상충 2)","AI 종합 의견" in t and "휴학 기간 상한 불일치" in t, "")
+        tiles=await pg.locator(".tile .val").all_inner_texts(); check("KPI 타일 5/3/1/2 (상위법 1건 병합)",tiles==["5","3","1","2"],tiles)
+        check("분석 이력 1건", await pg.locator("tbody tr").count()==1)
+        check("대시보드 상위법 요약","상위 법령" in t and "국가법령정보 조회" in t)
+        await pg.screenshot(path=f"{OUT}/04_dashboard_result.png",full_page=True)
+        # 상충 화면
+        await pg.click(".nav [data-v=conflicts]"); await pg.wait_for_timeout(200)
+        check("상충 카드 3건(상위법 포함)", await pg.locator("article.issue").count()==3)
+        v=await pg.inner_text("#view"); check("상위법 근거 조문·조회내역 표시","상위 법령" in v and "제19조(휴학)" in v and "국가법령정보 조회 내역" in v)
+        await pg.screenshot(path=f"{OUT}/05_conflicts.png",full_page=True)
+        await pg.click(".nav [data-v=terms]"); await pg.wait_for_timeout(200); check("용어 혼재 표","학과주임" in await pg.inner_text("#view"))
+        await pg.click(".nav [data-v=orgs]"); await pg.wait_for_timeout(200); check("조직명 불일치 표","학생복지처장" in await pg.inner_text("#view"))
+        # 개정안 생성
+        await pg.click(".nav [data-v=conflicts]"); await pg.wait_for_timeout(200)
+        await pg.locator("[data-draft='c:1']").click(); await pg.wait_for_timeout(1500)
+        p2=await pg.evaluate("window.__log.prompts[2].input")
+        check("개정안 프롬프트에 관련 규정 본문 포함","일반휴학 기간은 통산 4년" in p2)
+        t=await pg.inner_text("#view"); check("개정안 심의 화면 이동·대비표 표시","신구조문" in p2 and "통산 3년을 초과할 수 없다" in t and "검토중" in t)
+        await pg.fill("input[id^=cm-]","학칙과 일치시키는 데 동의"); await pg.locator("[data-dec^='승인']").click(); await pg.wait_for_timeout(400)
+        t=await pg.inner_text("#view"); check("승인 기록 및 의견 유지","승인" in t and await pg.input_value("input[id^=cm-]")=="학칙과 일치시키는 데 동의")
+        await pg.screenshot(path=f"{OUT}/06_drafts.png",full_page=True)
+        # 보고서
+        await pg.click(".nav [data-v=report]"); await pg.wait_for_timeout(200)
+        t=await pg.inner_text("#view"); check("보고서 본문 집계","상충·위계 위반 3건" in t and "[승인]" in t)
+        await pg.locator(".ckl").first.check(); await pg.wait_for_timeout(300)
+        await pg.click("#dlReport"); await pg.wait_for_timeout(300)
+        await pg.wait_for_timeout(800)
+        dl=await pg.evaluate("window.__log.downloads"); check("HWPX 묶음 내려받기 호출",len(dl)==1 and dl[0]["filename"].endswith("_한글.zip"),dl and dl[0]["filename"])
+        if dl and dl[0]["bytes"]: open(os.path.join(HERE,"out.zip"),"wb").write(bytes(dl[0]["bytes"]))
+        await pg.screenshot(path=f"{OUT}/07_report.png",full_page=True)
+        # 새로고침 후 저장 유지(동일 메모리 DB 아님 → 페이지 상태 재구독 확인용으로 다른 뷰 재렌더)
+        await pg.click(".nav [data-v=list]"); await pg.wait_for_timeout(200)
+        await pg.locator("[data-del-reg]").last.click(); await pg.click("#mOk"); await pg.wait_for_timeout(500)
+        check("삭제 후 4건",await pg.locator("tbody tr").count()==4)
+        # 해시 라우팅
+        await pg.evaluate("location.hash='#terms'"); await pg.wait_for_timeout(300)
+        check("해시 라우팅",(await pg.inner_text("#crumb"))=="용어 혼재")
+        # 모바일
+        m=await b.new_context(viewport={"width":390,"height":844},is_mobile=True,has_touch=True)
+        await m.route("https://**/*",h); mp=await m.new_page(); merr=[]
+        mp.on("pageerror",lambda e:merr.append(str(e))); await mp.add_init_script(MOCK)
+        await mp.goto("file://"+APP); await mp.wait_for_timeout(600)
+        await mp.click("#btnDemo"); await mp.wait_for_timeout(800)
+        await mp.click("#tabbar [data-v=run]"); await mp.wait_for_timeout(200); await mp.click("#btnRun"); await mp.wait_for_timeout(1800)
+        check("모바일 하단 탭바 표시",await mp.is_visible("#tabbar") and not await mp.is_visible(".side"))
+        sw=await mp.evaluate("document.documentElement.scrollWidth"); check("모바일 가로 넘침 없음",sw<=390,sw)
+        await mp.screenshot(path=f"{OUT}/08_mobile_dashboard.png",full_page=True)
+        await mp.click("#tabbar [data-v=conflicts]"); await mp.wait_for_timeout(200)
+        await mp.screenshot(path=f"{OUT}/09_mobile_conflicts.png",full_page=True)
+        check("모바일 오류 없음",not merr,merr)
+        # 저장소 없음(비로그인) 상황
+        n=await b.new_context(viewport={"width":1200,"height":800}); await n.route("https://**/*",lambda r:r.abort()); np_=await n.new_page(); nerr=[]
+        np_.on("pageerror",lambda e:nerr.append(str(e)))
+        await np_.goto("file://"+APP); await np_.wait_for_timeout(500)
+        t=await np_.inner_text("body"); check("비로그인 시 안내·동작","AI 사용 불가" in t and "임시 저장" in t)
+        await np_.click("#btnDemo"); await np_.wait_for_timeout(400); check("비로그인 임시 등록 동작",await np_.locator("tbody tr").count()==3)
+        await np_.click(".nav [data-v=run]"); await np_.wait_for_timeout(200); check("비로그인 분석 버튼 비활성",await np_.is_disabled("#btnRun"))
+        check("비로그인 오류 없음",not nerr,nerr)
+        check("데스크톱 스크립트 오류 없음",not [e for e in errs if "net::" not in e and "Failed to load resource" not in e and "PDF 모듈 없음" not in e],errs)
+        await b.close()
+    print("\n결과: %d/%d 통과"%(sum(r[1] for r in results),len(results)))
+asyncio.run(main())
